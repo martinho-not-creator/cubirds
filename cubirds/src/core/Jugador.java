@@ -1,44 +1,51 @@
-/*
- * Esta clase representa a cada jugador. Tendrá las siguientes funcionalidades
- * - Un constructor para crear el jugador
- * - Añadir y eliminar cartas de la mano
- * - Colocar cartas en la mesa
- * - Colocar cartas en su zona de juego
- * - Número de cartas en la mano
- * - Número de cartas en la zona de juego
- * - Número de especies distintas en la zona de juego
- * - Mostrar mano, zona de juego del jugador
- */
 package core;
 
 public class Jugador {
 
-      
-    /*
-    * Esta clase representa la zona de juego de un jugador. Tendrá las siguientes funcionalidades
-    * - Un constructor para crear la zona de juego
-    * - añadir cartas
-    * - Número de cartas
-    * - Número de especies distintas
-    * - mostrar zona de juego
-    */
-    private class ZonaJuego {
+    private String nombre;
+    private ZonaJuego zonaJuego;
+    private Mano mano;
 
-    } 
-    
-          
-    /*
-    * Esta clase representa la mano de un jugador. Tendrá las siguientes funcionalidades
-    * - Un constructor para crear la mano
-    * - añadir cartas
-    * - eliminar cartas
-    * - número de cartas
-    * - comprobar si hay cartas suficientes para bandada pequeña
-    * - mostrar mano
-    */
-    
-    private class Mano {
-
-    
+    public Jugador(String nombre, ZonaJuego zonaJuego, Mano mano) {
+        this.nombre = nombre;
+        this.zonaJuego = zonaJuego;
+        this.mano = mano;
     }
+
+    public void anadirCartaMano(Carta carta) {
+        mano.anadirCarta(carta);
+    }
+
+    public void eliminarCartasMano(Carta carta) {
+        mano.eliminarCarta(carta);
+    }
+
+    public void colocarCartaMesa(Carta carta) {
+        zonaJuego.colocarCarta(carta);
+    }
+
+    public void colocarCartasZonaJuego(Carta carta) {
+        zonaJuego.colocarCarta(carta);
+    }
+
+    public int numCartasMano() {
+        return mano.numCartas();
+    }
+
+    public int numCartasZonaJuego() {
+        return zonaJuego.numCartas();
+    }
+
+    public int numEspeciesDistintasZonaJuego() {
+        return zonaJuego.numEspeciesDistintas();
+    }
+
+    public void mostrarMano() {
+        mano.mostrar();
+    }
+
+    public void mostrarZonaJuego() {
+        zonaJuego.mostrar();
+    }
+
 }

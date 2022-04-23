@@ -10,14 +10,21 @@ public class Juego {
     public static final int NUM_CARTAS = 110;
     public static final int NUM_FILAS = 4;
     public static final int NUM_CARTAS_INICIALES_FILA = 3;
+    public static final int NUM_CARTAS_MANO_JUGADOR = 8;
 
     public static void inicio() {
 
         Baraja<Carta> baraja = inicializarBaraja();
+
         MontonDescartes<Carta> descartes = inicializarMontonDescartes();
+
         Mesa<Carta> mesa = inicializarMesa(baraja);
-        //Se crean los jugadores    
-        // Se reparten las cartas
+
+        Jugador jugador1 = inicializarJugador("Jugador 1", baraja);
+        Jugador jugador2 = inicializarJugador("Jugador 2", baraja);
+
+        iniciarJuego(jugador1, jugador2, mesa, descartes, baraja);
+
         // Empieza el juego
         //Jugador coloca en la mesa
         //Se comprueba si el jugador se ha quedado sin cartas
@@ -25,6 +32,11 @@ public class Juego {
         //Si el jugador no es ganador, se comprueba si se ha quedado sin cartas
         //Se rellena la mesa
 
+    }
+
+    public iniciarJuego(Jugador jugador1, Jugador jugador2, Mesa<Carta> mesa, MontonDescartes<Carta> descartes, Baraja<Carta> baraja) {
+        // TODO - implement Juego.iniciarJuego
+        throw new UnsupportedOperationException();
     }
 
     public static Baraja<Carta> inicializarBaraja() {
@@ -53,6 +65,21 @@ public class Juego {
         Mesa<Carta> mesa = new Mesa<>();
         mesa.colocarCartasInicio(baraja);
         return mesa;
+    }
+
+    public static Jugador inicializarJugador(String nombre, Baraja baraja) {
+
+        Mano mano = inicializarMano();
+
+        for (int i = 0; i < NUM_CARTAS_MANO_JUGADOR; i++) {
+            mano.anadirCarta(baraja.suprimir());
+        }
+
+        ZonaJuego zona = inicializarZonaJuego();
+        zona.insertar(baraja.suprimir());
+
+        return new Jugador(nombre, mano, zona);
+
     }
 
 }

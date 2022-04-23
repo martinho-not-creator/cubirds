@@ -46,7 +46,7 @@ public class Mano<E> {
     public boolean esSuficiente(Carta carta) {
         int pos = existePilaElemento((E) carta);
         if (pos != -1) {
-            return zona.get(pos).tamaño() == carta.getBandadaPequena();
+            return zona.get(pos).tamaño() >= carta.getBandadaPequena();
         }
         return false;
     }
@@ -60,7 +60,6 @@ public class Mano<E> {
     }
 
     public void pintar() {
-        System.out.println("Mano");
         for (Pila<E> pila : zona) {
             System.out.println("Pila de " + pila.top() + " | " + pila.tamaño());
         }

@@ -35,8 +35,26 @@ public class ZonaJuego<E> {
         }
     }
 
+    public String cartasPorEspecie() {
+        String m = "";
+        for(Pila pila : zona) {
+            if (!pila.esVacio()) {
+                m += pila.top().getNombre() + " - " + pila.tamaño() "\n";
+            }
+        }
+       return m;
+    }
+
+    public boolean existe
+
     public int getNumEspecies() {
-        return zona.size();
+        int numEspecies = 0;
+        for (Pila<E> pila : zona) {
+            if (!pila.esVacio()) {
+                numEspecies++;
+            }
+        }
+        return numEspecies;
     }
 
     public int getNumCartas() {
@@ -48,7 +66,6 @@ public class ZonaJuego<E> {
     }
 
     public <Carta> void pintar() {
-        System.out.println("Zona de juego");
         for (Pila<E> pila : zona) {
             System.out.println("Pila de " + pila.top() + " | " + pila.tamaño());
         }
