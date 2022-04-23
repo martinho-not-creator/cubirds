@@ -9,6 +9,7 @@ public class ES {
     public static String leeCadena(String mensaje, boolean permiteVacia) {
 
         String leer;
+        boolean esValido = false;
 
         do {
 
@@ -22,13 +23,16 @@ public class ES {
                     throw new Exception("La cadena introducida no puede estar vacía. Por favor, introdúcela de nuevo.");
                 }
 
+                esValido = true;
+
             } catch (Exception exc) {
 
+                esValido = false;
                 System.err.println(exc.getMessage());
 
             }
 
-        } while ((permiteVacia == false) && leer.length() == 0);
+        } while (!esValido);
 
         return leer;
 
