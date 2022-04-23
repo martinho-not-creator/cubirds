@@ -69,48 +69,5 @@ public class ZonaJuego<E> {
             System.out.println("Pila de " + pila.top() + " | " + pila.tamaño());
         }
     }
-    
-//    public int numCartas(){
-//        int toRet = 0;
-//        for (int i = 0; i < zona.size(); i++) {
-//            Pila<E> pila = zona.get(i); 
-//            toRet += pila.tamaño();
-//        }
-//        return toRet;
-//    }
-            
-    public int numEspeciesDistintas(){
-        return zona.size();
-    }
-    
-    public void colocarCarta(Carta c){
-        int i = existePilaElemento((E)c);
-        if(i == -1){
-            Pila<E> p = new EnlazadaPila<>();
-            p.push((E)c);
-            zona.add(p);
-        }else{
-            Pila<E> pila = zona.get(i);
-            pila.push((E)c);
-        }
-    }
-           
-//    public void pintar(){
-//        String toRet=" ";
-//        for (int i = 0; i < zona.size(); i++) {
-//            Pila<E> pila = zona.get(i); 
-//            toRet += "Especie: "+pila.top().getClass()+", cantidad: "+pila.tamaño()+"\n";
-//        }
-//        System.out.println(toRet);
-//    }
-    
-    public int existePilaElemento(E elemento) {
-        for (int i = 0; i < zona.size(); i++) {
-            Pila<E> pila = zona.get(i);
-            if (!pila.esVacio() && pila.top().equals(elemento)) {
-                return i;
-            }
-        }
-        return -1;
-    }
+
 }

@@ -20,9 +20,6 @@ public class MontonDescartes<E> implements Pila<E> {
     @Override
     public boolean esVacio() {
         return this.contador == 0;
-        
-        
-        
     }
 
     @Override
