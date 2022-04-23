@@ -2,6 +2,8 @@ package core;
 
 import java.util.ArrayList;
 import java.util.List;
+import lista.Lista;
+import lista.ListaEnlazada;
 import pila.EnlazadaPila;
 import pila.Pila;
 
@@ -23,6 +25,15 @@ public class Mano<E> {
         return -1;
     }
 
+    public Lista<Carta.AVE> especiesDisponibles() {
+        Lista<Carta.AVE> lista = new ListaEnlazada<>();
+        for (Pila<E> pila : zona) {
+            Carta carta = (Carta) pila.top();
+            lista.insertarFinal(carta.getNombre());
+        }
+        return lista;
+    }
+
     public void insertar(E elemento) {
         int pos = existePilaElemento(elemento);
         if (pos != -1) {
@@ -34,12 +45,12 @@ public class Mano<E> {
         }
     }
 
-    public void eliminarElementos(E elementoTipo) throws Exception {
+    public Pila<E> eliminarElementos(E elementoTipo) throws Exception {
         int pos = existePilaElemento(elementoTipo);
         if (pos == -1) {
             throw new Exception("No existe ese tipo en la mano");
         } else {
-            zona.remove(pos);
+            return zona.remove(pos);
         }
     }
 

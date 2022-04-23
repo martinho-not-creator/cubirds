@@ -1,21 +1,22 @@
 package core;
 
 import iu.*;
-import java.util.ArrayList;
-import java.util.List;
+import lista.IteradorLista;
+import lista.Lista;
+import lista.ListaEnlazada;
 
 public class Mesa<E> {
 
-    private List<E>[] tablero;
+    private Lista<E>[] tablero;
 
     public Mesa() {
-        tablero = new ArrayList[Juego.NUM_FILAS];
+        tablero = new ListaEnlazada[Juego.NUM_FILAS];
         for (int i = 0; i < tablero.length; i++) {
-            tablero[i] = new ArrayList<>();
+            tablero[i] = new ListaEnlazada<>();
         }
     }
 
-    public boolean existeEnFila(List<E> fila, E elemento) {
+    public boolean existeEnFila(Lista<E> fila, E elemento) {
         for (E element : fila) {
             if (element.equals(elemento)) {
                 {
@@ -26,7 +27,7 @@ public class Mesa<E> {
         return false;
     }
 
-    public int contarEnFila(List<E> fila, E elemento) {
+    public int contarEnFila(Lista<E> fila, E elemento) {
         int contador = 0;
         for (E element : fila) {
             if (element.equals(elemento)) {
@@ -38,57 +39,78 @@ public class Mesa<E> {
         return contador;
     }
 
-    public List<E> elementosRepetidos(List<E> fila) {
-        List<E> toRet = new ArrayList<>();
+    public Lista<E> elementosRepetidos(Lista<E> fila) {
+        Lista<E> toRet = new ListaEnlazada<>();
         for (E element : fila) {
-            if (contarEnFila(fila, element) > 1 && !toRet.contains(element)) {
-                toRet.add(element);
+            if (contarEnFila(fila, element) > 1 && !toRet.contiene(element)) {
+                toRet.insertarFinal(element);
             }
         }
         return toRet;
     }
 
-    public List<E> eliminarRodeadas(List<E> fila, E elemento, int lado) {
-        List<E> posiciones = new ArrayList<>();
+    public Lista<E> eliminarRodeadas(int numFila, E elemento, char lado) {
+
+        Lista<E> elementos = new ListaEnlazada<>();
+
+        Lista<E> fila = tablero[numFila];
+
         boolean cargando = false;
-        if (contarEnFila(fila, elemento) > 1) {
-            if (lado == 0) {
-                for (int i = 0; i < fila.size(); i++) {
-                    E e = fila.get(i);
-                    if (elemento.equals(e)) {
-                        if (cargando == false) {
-                            cargando = true;
-                            continue;
-                        } else {
+
+        if (contarEnFila(fila, elemento) > 1) { // Existe en esa fila elementos repetidos
+
+            if (lado == 'i') { // De izquierda a derecha
+
+                for (E ele : fila) {
+
+                    elementos.insertarFinal(ele);
+
+                    if (!ele.equals(elemento)) { // Me encuentro con el primero que no es igual
+
+                        cargando = true;
+
+                    } else { // Los elementos son iguales
+
+                        if (cargando = true) { // Si ya hemos visto uno distinto al siguiente igual se termina
+
                             break;
+
                         }
+
                     }
-                    if (cargando) {
-                        fila.remove(e);
-                        posiciones.add(e);
-                        i--;
-                    }
+
                 }
-            } else {
-                for (int i = fila.size() - 1; i < -1; i--) {
-                    E e = fila.get(i);
-                    if (elemento.equals(e)) {
-                        if (cargando == false) {
-                            cargando = true;
-                            continue;
-                        } else {
+
+            } else { // De izquierda a derecha
+
+                IteradorLista itr = fila.iteradorLista();
+
+                for (int i = 0; i < fila.tamaño(); i++) {
+
+                    E ele = (E) itr.previous();
+                    elementos.insertarFinal(ele);
+
+                    if (!ele.equals(elemento)) { // Me encuentro con el primero que no es igual
+
+                        cargando = true;
+
+                    } else { // Los elementos son iguales
+
+                        if (cargando = true) { // Si ya hemos visto uno distinto al anterior igual se termina
+
                             break;
+
                         }
+
                     }
-                    if (cargando) {
-                        fila.remove(e);
-                        posiciones.add(e);
-                        i++;
-                    }
+
                 }
+
             }
         }
-        return posiciones;
+
+        return elementos;
+        
     }
 
     public void colocarCartasInicio(Baraja baraja) {
@@ -102,7 +124,7 @@ public class Mesa<E> {
                 Carta nuevaCarta = (Carta) baraja.suprimir();
 
                 if (!existeEnFila(tablero[i], (E) nuevaCarta)) {
-                    tablero[i].add((E) nuevaCarta);
+                    tablero[i].insertarFinal((E) nuevaCarta);
                     contador++;
                 } else {
                     baraja.insertar(nuevaCarta);
@@ -115,17 +137,17 @@ public class Mesa<E> {
     }
 
     public void insertarDerecha(int fila, E elemento) {
-        tablero[fila].add(elemento);
+        tablero[fila].insertarFinal(elemento);
     }
 
     public void insertarIzquierda(int fila, E elemento) {
-        tablero[fila].add(0, elemento);
+        tablero[fila].insertarPrincipio(elemento);
     }
 
     public void pintar() {
 
-        for (int i = 0; i < tablero.length; i++) {
-            for (E elemento : tablero[i]) {
+        for (Lista<E> tablero1 : tablero) {
+            for (E elemento : tablero1) {
                 System.out.print(elemento);
             }
             System.out.println("");

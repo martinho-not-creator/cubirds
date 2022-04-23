@@ -1,5 +1,8 @@
 package core;
 
+import lista.Lista;
+import pila.Pila;
+
 public class Jugador {
 
     private String nombre;
@@ -13,39 +16,43 @@ public class Jugador {
     }
 
     public void anadirCartaMano(Carta carta) {
-        mano.anadirCarta(carta);
+        mano.insertar(carta);
     }
 
-    public void eliminarCartasMano(Carta carta) {
-        mano.eliminarCarta(carta);
+    public Pila<Carta> eliminarCartasMano(Carta carta) throws Exception {
+        return mano.eliminarElementos(carta);
     }
 
-    public void colocarCartaMesa(Carta carta) {
-        zonaJuego.colocarCarta(carta);
-    }
-
-    public void colocarCartasZonaJuego(Carta carta) {
-        zonaJuego.colocarCarta(carta);
+    public void anadirCartasZonaJuego(Carta carta) {
+        zonaJuego.insertar(carta);
     }
 
     public int numCartasMano() {
-        return mano.numCartas();
+        return mano.getNumElementos();
     }
 
     public int numCartasZonaJuego() {
-        return zonaJuego.numCartas();
+        return zonaJuego.getNumCartas();
+    }
+
+    public int existeEspecieMano(Carta especie) {
+        return mano.existePilaElemento(especie);
+    }
+
+    public Lista<Carta.AVE> especiesDisponiblesMano() {
+        return mano.especiesDisponibles();
     }
 
     public int numEspeciesDistintasZonaJuego() {
-        return zonaJuego.numEspeciesDistintas();
+        return zonaJuego.getNumEspecies();
     }
 
     public void mostrarMano() {
-        mano.mostrar();
+        mano.pintar();
     }
 
     public void mostrarZonaJuego() {
-        zonaJuego.mostrar();
+        zonaJuego.pintar();
     }
 
 }

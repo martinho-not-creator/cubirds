@@ -1,14 +1,96 @@
 package iu;
 
+import core.Carta;
 import java.util.Scanner;
+import lista.Lista;
 
 public class ES {
 
     public static final Scanner teclado = new Scanner(System.in);
 
+    public static Carta.AVE leeEspecie(String mensaje, Lista<Carta.AVE> especiesDisponibles) {
+
+        Carta.AVE especie = null;
+        boolean esValido = false;
+
+        do {
+
+            try {
+
+                int c = 0;
+                for (Carta.AVE especieDisponible : especiesDisponibles) {
+                    System.out.println(c + " - " + especieDisponible);
+                    c++;
+                }
+
+                int pos = leeEntero(mensaje, true, 0, especiesDisponibles.tamaño() - 1);
+
+                c = 0;
+                for (Carta.AVE especieDisponible : especiesDisponibles) {
+                    if (c == pos) {
+                        especie = especieDisponible;
+                    }
+                }
+
+                esValido = true;
+
+            } catch (Exception e) {
+
+                esValido = false;
+                System.err.println(e.getMessage());
+
+            }
+
+        } while (!esValido);
+
+        return especie;
+
+    }
+
+    public static boolean leeDecision(String mensaje) {
+
+        char texto;
+        boolean decision = false;
+        boolean esValido = false;
+
+        do {
+
+            try {
+
+                texto = leeCadena(mensaje, false).toLowerCase().charAt(0);
+
+                if (texto == 's') {
+
+                    decision = true;
+
+                } else if (texto == 'n') {
+
+                    decision = false;
+
+                } else {
+
+                    throw new Exception("La cadena introducida no es correcta");
+
+                }
+
+                esValido = true;
+
+            } catch (Exception e) {
+
+                esValido = false;
+                System.err.println(e.getMessage());
+
+            }
+
+        } while (!esValido);
+
+        return decision;
+
+    }
+
     public static String leeCadena(String mensaje, boolean permiteVacia) {
 
-        String leer;
+        String leer = "";
         boolean esValido = false;
 
         do {
@@ -38,18 +120,18 @@ public class ES {
 
     }
 
-    public static String leeLado(String mensaje) {
+    public static char leeLado(String mensaje) {
 
-        String leer;
+        char leer = ' ';
         boolean esValido = false;
 
         do {
 
             try {
 
-                leer = leeCadena(mensaje, false).toLowerCase();
+                leer = leeCadena(mensaje, false).toLowerCase().charAt(0);
 
-                if (!leer.equals("derecha") && !leer.equals("izquierda") && !leer.equals("d") && !leer.equals("i")) {
+                if (leer != 'd' && leer != 'i') {
 
                     throw new Exception("La cadena introducida no es un lado válido. Por favor, introdúcela de nuevo.");
 
@@ -95,15 +177,15 @@ public class ES {
 
                 esValido = true;
 
-            } catch (NumberFormatException exc) {
+            } catch (NumberFormatException e) {
 
                 esValido = false;
                 System.err.println("La cadena introducida no se puede convertir a número entero. Por favor, introdúcela de nuevo.");
 
-            } catch (Exception exc) {
+            } catch (Exception e) {
 
                 esValido = false;
-                System.err.println(exc.getMessage());
+                System.err.println(e.getMessage());
 
             }
 
@@ -112,6 +194,5 @@ public class ES {
         return toret;
 
     }
-
 
 }

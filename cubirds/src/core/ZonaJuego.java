@@ -37,15 +37,14 @@ public class ZonaJuego<E> {
 
     public String cartasPorEspecie() {
         String m = "";
-        for(Pila pila : zona) {
+        for (Pila<E> pila : zona) {
             if (!pila.esVacio()) {
-                m += pila.top().getNombre() + " - " + pila.tamaño() "\n";
+                Carta carta = (Carta) pila.top();
+                m += carta.getNombre() + " - " + pila.tamaño() + "\n";
             }
         }
-       return m;
+        return m;
     }
-
-    public boolean existe
 
     public int getNumEspecies() {
         int numEspecies = 0;
