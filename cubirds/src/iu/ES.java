@@ -14,9 +14,6 @@ public class ES {
         boolean esValido = false;
 
         do {
-
-			
-
             try {
 
                 int c = 0;
