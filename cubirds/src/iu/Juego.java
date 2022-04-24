@@ -12,12 +12,11 @@ import static iu.ES.leeEspecie;
 import static iu.ES.leeLado;
 import static iu.ES.leeEntero;
 import static iu.ES.leeDecision;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Stack;
-import lista.IteradorLista;
-import lista.Lista;
-import lista.ListaEnlazada;
-import pila.Pila;
 
 public class Juego {
 
@@ -36,11 +35,11 @@ public class Juego {
         Mesa<Carta> mesa = inicializarMesa(baraja);
 
         int numJugadores = leeEntero("Numero de jugadores: ", true, 2, 5);
-        Lista<Jugador> jugadores = new ListaEnlazada<>();
+        List<Jugador> jugadores = new ArrayList<>();
 
         for (int i = 0; i < numJugadores; i++) {
             Jugador nuevoJugador = inicializarJugador("Jugador " + 1, baraja);
-            jugadores.insertarFinal(nuevoJugador);
+            jugadores.add(nuevoJugador);
         }
 
         iniciarJuego(jugadores, mesa, descartes, baraja);
@@ -53,14 +52,14 @@ public class Juego {
         //Se rellena la mesa
     }
 
-    public static void iniciarJuego(Lista<Jugador> jugadores, Mesa<Carta> mesa, MontonDescartes<Carta> descartes, Baraja<Carta> baraja) {
+    public static void iniciarJuego(List<Jugador> jugadores, Mesa<Carta> mesa, MontonDescartes<Carta> montonDescartes, Baraja<Carta> baraja) {
 
         try {
 
             boolean hayGanador = false;
             boolean decision;
 
-            IteradorLista itr = jugadores.iteradorLista();
+            ListIterator itr = jugadores.listIterator();
 
             while (!hayGanador) {
 
@@ -73,10 +72,18 @@ public class Juego {
                     jugarCartas(jugadorActual, mesa, baraja);
                 }
 
-                decision = leeDecision("Quieres completar bandada: ");
-                if (decision) {
-                    completarBandada(jugadorActual, mesa, baraja);
-                }
+                do {
+                    List<Carta.AVE> bandadasDisponibles = jugadorActual.especiesDisponiblesMano(true);
+                    if (!bandadasDisponibles.isEmpty()) {
+                        decision = leeDecision("Quieres completar bandada: ");
+                        if (decision) {
+                            completarBandada(jugadorActual, bandadasDisponibles, montonDescartes);
+                        }
+                    } else {
+                        decision = false;
+                        System.out.println("No hay bandadas para completar");
+                    }
+                } while (decision);
 
                 //TODO Rellenar mesa
             }
@@ -89,9 +96,25 @@ public class Juego {
 
     }
 
-    public static void completarBandada(Jugador jugador, Mesa<Carta> mesa, Baraja<Carta> baraja) {
+    public static void completarBandada(Jugador jugador, List<Carta.AVE> bandadasDisponibles, MontonDescartes<Carta> montonDescartes) throws Exception {
 
-        // Que bandadas puede completar
+        if (!bandadasDisponibles.isEmpty()) {
+
+            // Seleccionamos la especie que quiere completar
+            Carta.AVE especie = leeEspecie("Que bandada quieres completar: ", bandadasDisponibles);
+
+            Carta cartaEspecie = new Carta(especie);
+
+            Stack<Carta> pilaCartas = jugador.eliminarCartasMano(cartaEspecie);
+
+            jugador.anadirCartasZonaJuego(pilaCartas.pop());
+
+            for (Carta carta : pilaCartas) {
+                montonDescartes.push(carta);
+            }
+
+        }
+
     }
 
     public static void jugarCartas(Jugador jugador, Mesa<Carta> mesa, Baraja<Carta> baraja) throws Exception {
@@ -121,7 +144,7 @@ public class Juego {
         List<Carta> eliminadas = mesa.eliminarRodeadas(fila, cartaBajar, lado);
 
         // Se han eliminado cartas se agregan a la mano
-        if (eliminadas.size() > 0) {
+        if (!eliminadas.isEmpty()) {
 
             for (Carta carta : eliminadas) {
 

@@ -26,12 +26,6 @@ public class MontonDescartes<E> {
         this.elementos.push(elemento);
     }
 
-    public void push(E... elementos) {
-        for (E elemento : elementos) {
-            this.elementos.push(elemento);
-        }
-    }
-
     public E pop() throws NullPointerException {
         return this.elementos.pop();
     }
