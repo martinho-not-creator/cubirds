@@ -27,13 +27,50 @@ public class Mesa<E> {
         return false;
     }
 
-    public int contarEnFila(List<E> fila, E elemento) {
-        int contador = 0;
-        for (E element : fila) {
-            if (element.equals(elemento)) {
-                {
+    public void rellenarFilas(Baraja<E> baraja) {
+
+        for (List<E> fila : tablero) {
+
+            int contador = 0;
+
+            for (Carta.AVE especie : Carta.AVE.values()) {
+                if (existeEnFila(fila, (E) especie)) {
                     contador++;
                 }
+            }
+
+            while (contador < 3) {
+
+                if (!baraja.esVacio()) {
+
+                    Carta nuevaCarta = (Carta) baraja.suprimir();
+
+                    if (!existeEnFila(fila, (E) nuevaCarta)) {
+
+                        fila.add((E) nuevaCarta);
+                        contador++;
+
+                    } else {
+
+                        baraja.insertar((E) nuevaCarta);
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+
+    public int contarEnFila(List<E> fila, E elemento, boolean iguales) {
+        int contador = 0;
+        for (E element : fila) {
+            if (iguales && element.equals(elemento)) {
+                contador++;
+            } else if (!iguales && !element.equals(elemento)) {
+                contador++;
             }
         }
         return contador;
@@ -42,7 +79,7 @@ public class Mesa<E> {
     public List<E> elementosRepetidos(List<E> fila) {
         List<E> toRet = new ArrayList<>();
         for (E element : fila) {
-            if (contarEnFila(fila, element) > 1 && !toRet.contains(element)) {
+            if (contarEnFila(fila, element, true) > 1 && !toRet.contains(element)) {
                 toRet.add(element);
             }
         }
@@ -57,7 +94,7 @@ public class Mesa<E> {
 
         boolean cargando = false;
 
-        if (contarEnFila(fila, elemento) > 1) { // Existe en esa fila elementos repetidos
+        if (contarEnFila(fila, elemento, true) > 1) { // Existe en esa fila elementos repetidos
 
             if (lado == 'i') { // De izquierda a derecha
 

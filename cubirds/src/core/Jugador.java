@@ -15,6 +15,10 @@ public class Jugador {
         this.mano = mano;
     }
 
+    public String getNombre() {
+        return nombre;
+    }
+
     public void anadirCartaMano(Carta carta) {
         mano.insertar(carta);
     }
@@ -48,11 +52,18 @@ public class Jugador {
     }
 
     public void mostrarMano() {
+        System.out.println("Mano de " + getNombre());
         mano.pintar();
     }
 
     public void mostrarZonaJuego() {
+        System.out.println("Zona juego de " + getNombre());
         zonaJuego.pintar();
+    }
+
+    @Override
+    public String toString() {
+        return getNombre();
     }
 
 }
