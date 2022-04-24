@@ -1,7 +1,7 @@
 package core;
 
-import lista.Lista;
-import pila.Pila;
+import java.util.List;
+import java.util.Stack;
 
 public class Jugador {
 
@@ -19,7 +19,7 @@ public class Jugador {
         mano.insertar(carta);
     }
 
-    public Pila<Carta> eliminarCartasMano(Carta carta) throws Exception {
+    public Stack<Carta> eliminarCartasMano(Carta carta) throws Exception {
         return mano.eliminarElementos(carta);
     }
 
@@ -39,8 +39,8 @@ public class Jugador {
         return mano.existePilaElemento(especie);
     }
 
-    public Lista<Carta.AVE> especiesDisponiblesMano() {
-        return mano.especiesDisponibles();
+    public List<Carta.AVE> especiesDisponiblesMano(boolean minTamBandada) {
+        return mano.especiesDisponibles(minTamBandada);
     }
 
     public int numEspeciesDistintasZonaJuego() {

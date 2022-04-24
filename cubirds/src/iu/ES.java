@@ -1,14 +1,14 @@
 package iu;
 
 import core.Carta;
+import java.util.List;
 import java.util.Scanner;
-import lista.Lista;
 
 public class ES {
 
     public static final Scanner teclado = new Scanner(System.in);
 
-    public static Carta.AVE leeEspecie(String mensaje, Lista<Carta.AVE> especiesDisponibles) {
+    public static Carta.AVE leeEspecie(String mensaje, List<Carta.AVE> especiesDisponibles) {
 
         Carta.AVE especie = null;
         boolean esValido = false;
@@ -22,7 +22,7 @@ public class ES {
                     c++;
                 }
 
-                int pos = leeEntero(mensaje, true, 0, especiesDisponibles.tamaño() - 1);
+                int pos = leeEntero(mensaje, true, 0, especiesDisponibles.size() - 1);
 
                 c = 0;
                 for (Carta.AVE especieDisponible : especiesDisponibles) {

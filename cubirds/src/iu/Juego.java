@@ -12,6 +12,9 @@ import static iu.ES.leeEspecie;
 import static iu.ES.leeLado;
 import static iu.ES.leeEntero;
 import static iu.ES.leeDecision;
+import java.util.List;
+import java.util.Stack;
+import lista.IteradorLista;
 import lista.Lista;
 import lista.ListaEnlazada;
 import pila.Pila;
@@ -55,22 +58,28 @@ public class Juego {
         try {
 
             boolean hayGanador = false;
+            boolean decision;
 
-            Jugador jugadorActual = jugadores.recuperar();
-            jugadores.insertarFinal(jugadorActual);
+            IteradorLista itr = jugadores.iteradorLista();
 
             while (!hayGanador) {
 
+                Jugador jugadorActual = (Jugador) itr.previous();
+
                 mesa.pintar();
 
-                jugarCartas(jugadorActual, mesa, baraja);
+                decision = leeDecision("Quieres jugar cartas: ");
+                if (decision) {
+                    jugarCartas(jugadorActual, mesa, baraja);
+                }
 
-                //TODO Completar bandada
+                decision = leeDecision("Quieres completar bandada: ");
+                if (decision) {
+                    completarBandada(jugadorActual, mesa, baraja);
+                }
+
                 //TODO Rellenar mesa
-                
             }
-
-            System.out.println("Ha ganado el jugador: " + jugadorActual);
 
         } catch (Exception e) {
 
@@ -80,13 +89,18 @@ public class Juego {
 
     }
 
+    public static void completarBandada(Jugador jugador, Mesa<Carta> mesa, Baraja<Carta> baraja) {
+
+        // Que bandadas puede completar
+    }
+
     public static void jugarCartas(Jugador jugador, Mesa<Carta> mesa, Baraja<Carta> baraja) throws Exception {
 
         // Jugar cartas
         Carta cartaBajar = solicitarEspecie(jugador); // devuelve una nueva carta para comparar
 
         // Se eliminan las cartas de esa misma especie de la mano
-        Pila<Carta> cartasMano = jugador.eliminarCartasMano(cartaBajar);
+        Stack<Carta> cartasMano = jugador.eliminarCartasMano(cartaBajar);
 
         // Posiciones para colocar las cartas
         char lado = leeLado("Introduce el lado para bajar " + cartaBajar.getNombre());
@@ -94,20 +108,20 @@ public class Juego {
 
         // Colocamos las cartas en la mesa segun el lado y la fila indicada
         if (lado == 'd') {
-            while (!cartasMano.esVacio()) {
+            while (!cartasMano.isEmpty()) {
                 mesa.insertarDerecha(fila, cartasMano.pop());
             }
         } else {
-            while (!cartasMano.esVacio()) {
+            while (!cartasMano.isEmpty()) {
                 mesa.insertarIzquierda(fila, cartasMano.pop());
             }
         }
 
         // Comprobamos si rodeamos cartas
-        Lista<Carta> eliminadas = mesa.eliminarRodeadas(fila, cartaBajar, lado);
+        List<Carta> eliminadas = mesa.eliminarRodeadas(fila, cartaBajar, lado);
 
         // Se han eliminado cartas se agregan a la mano
-        if (eliminadas.tamaño() > 0) {
+        if (eliminadas.size() > 0) {
 
             for (Carta carta : eliminadas) {
 
@@ -137,7 +151,7 @@ public class Juego {
         do {
 
             jugador.mostrarMano();
-            Carta.AVE especie = leeEspecie("Que especie quiere bajar: ", jugador.especiesDisponiblesMano());
+            Carta.AVE especie = leeEspecie("Que especie quiere bajar: ", jugador.especiesDisponiblesMano(false));
 
             carta = new Carta(especie);
 
@@ -167,7 +181,7 @@ public class Juego {
     }
 
     public static MontonDescartes<Carta> inicializarMontonDescartes() {
-        MontonDescartes<Carta> montonDescartes = new MontonDescartes<>(NUM_CARTAS);
+        MontonDescartes<Carta> montonDescartes = new MontonDescartes<>();
         return montonDescartes;
     }
 

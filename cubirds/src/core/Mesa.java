@@ -1,22 +1,22 @@
 package core;
 
 import iu.*;
-import lista.IteradorLista;
-import lista.Lista;
-import lista.ListaEnlazada;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
 
 public class Mesa<E> {
 
-    private Lista<E>[] tablero;
+    private List<E>[] tablero;
 
     public Mesa() {
-        tablero = new ListaEnlazada[Juego.NUM_FILAS];
+        tablero = new ArrayList[Juego.NUM_FILAS];
         for (int i = 0; i < tablero.length; i++) {
-            tablero[i] = new ListaEnlazada<>();
+            tablero[i] = new ArrayList<>();
         }
     }
 
-    public boolean existeEnFila(Lista<E> fila, E elemento) {
+    public boolean existeEnFila(List<E> fila, E elemento) {
         for (E element : fila) {
             if (element.equals(elemento)) {
                 {
@@ -27,7 +27,7 @@ public class Mesa<E> {
         return false;
     }
 
-    public int contarEnFila(Lista<E> fila, E elemento) {
+    public int contarEnFila(List<E> fila, E elemento) {
         int contador = 0;
         for (E element : fila) {
             if (element.equals(elemento)) {
@@ -39,21 +39,21 @@ public class Mesa<E> {
         return contador;
     }
 
-    public Lista<E> elementosRepetidos(Lista<E> fila) {
-        Lista<E> toRet = new ListaEnlazada<>();
+    public List<E> elementosRepetidos(List<E> fila) {
+        List<E> toRet = new ArrayList<>();
         for (E element : fila) {
-            if (contarEnFila(fila, element) > 1 && !toRet.contiene(element)) {
-                toRet.insertarFinal(element);
+            if (contarEnFila(fila, element) > 1 && !toRet.contains(element)) {
+                toRet.add(element);
             }
         }
         return toRet;
     }
 
-    public Lista<E> eliminarRodeadas(int numFila, E elemento, char lado) {
+    public List<E> eliminarRodeadas(int numFila, E elemento, char lado) {
 
-        Lista<E> elementos = new ListaEnlazada<>();
+        List<E> elementos = new ArrayList<>();
 
-        Lista<E> fila = tablero[numFila];
+        List<E> fila = tablero[numFila];
 
         boolean cargando = false;
 
@@ -63,7 +63,7 @@ public class Mesa<E> {
 
                 for (E ele : fila) {
 
-                    elementos.insertarFinal(ele);
+                    elementos.add(ele);
 
                     if (!ele.equals(elemento)) { // Me encuentro con el primero que no es igual
 
@@ -83,12 +83,12 @@ public class Mesa<E> {
 
             } else { // De izquierda a derecha
 
-                IteradorLista itr = fila.iteradorLista();
+                ListIterator itr = fila.listIterator();
 
-                for (int i = 0; i < fila.tamaño(); i++) {
+                for (int i = 0; i < fila.size(); i++) {
 
                     E ele = (E) itr.previous();
-                    elementos.insertarFinal(ele);
+                    elementos.add(ele);
 
                     if (!ele.equals(elemento)) { // Me encuentro con el primero que no es igual
 
@@ -110,7 +110,7 @@ public class Mesa<E> {
         }
 
         return elementos;
-        
+
     }
 
     public void colocarCartasInicio(Baraja baraja) {
@@ -124,7 +124,7 @@ public class Mesa<E> {
                 Carta nuevaCarta = (Carta) baraja.suprimir();
 
                 if (!existeEnFila(tablero[i], (E) nuevaCarta)) {
-                    tablero[i].insertarFinal((E) nuevaCarta);
+                    tablero[i].add((E) nuevaCarta);
                     contador++;
                 } else {
                     baraja.insertar(nuevaCarta);
@@ -137,16 +137,16 @@ public class Mesa<E> {
     }
 
     public void insertarDerecha(int fila, E elemento) {
-        tablero[fila].insertarFinal(elemento);
+        tablero[fila].add(elemento);
     }
 
     public void insertarIzquierda(int fila, E elemento) {
-        tablero[fila].insertarPrincipio(elemento);
+        tablero[fila].add(0, elemento);
     }
 
     public void pintar() {
 
-        for (Lista<E> tablero1 : tablero) {
+        for (List<E> tablero1 : tablero) {
             for (E elemento : tablero1) {
                 System.out.print(elemento);
             }

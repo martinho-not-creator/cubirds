@@ -1,51 +1,39 @@
 package core;
 
-import pila.*;
+import java.util.Stack;
 
-public class MontonDescartes<E> implements Pila<E> {
+public class MontonDescartes<E> {
 
-    private E[] elementos;
-    private int contador;
+    private Stack<E> elementos;
 
-    public MontonDescartes(int maxTamano) {
-        this.elementos = (E[]) new Object[maxTamano];
-        this.contador = 0;
+    public MontonDescartes() {
+        this.elementos = new Stack<>();
     }
 
-    @Override
     public int tamaño() {
-        return this.contador;
+        return this.elementos.size();
     }
 
-    @Override
     public boolean esVacio() {
-        return this.contador == 0;
+        return this.elementos.isEmpty();
     }
 
-    @Override
     public E top() throws NullPointerException {
-        return elementos[contador--];
+        return this.elementos.peek();
     }
 
-    @Override
     public void push(E elemento) {
-        elementos[contador] = elemento;
-        contador++;
+        this.elementos.push(elemento);
     }
 
-    @Override
     public void push(E... elementos) {
         for (E elemento : elementos) {
-            elementos[contador] = elemento;
-            contador++;
+            this.elementos.push(elemento);
         }
     }
 
-    @Override
     public E pop() throws NullPointerException {
-        E elemento = elementos[contador--];
-        contador--;
-        return elemento;
+        return this.elementos.pop();
     }
 
 }

@@ -1,55 +1,48 @@
 package core;
 
-import cola.*;
+import java.util.ArrayDeque;
+import java.util.Queue;
 
-public class Baraja<E> implements Cola<E> {
+public class Baraja<E> {
 
-    private E[] elementos;
-    private int numElementos;
+    private Queue<E> elementos;
 
     public Baraja(int numMaxElementos) {
-        this.elementos = (E[]) new Object[numMaxElementos];
-        this.numElementos = 0;
+        elementos = new ArrayDeque<>();
     }
 
-    @Override
     public int tamaño() {
-        return this.numElementos;
+        return this.elementos.size();
     }
 
-    @Override
     public boolean esVacio() {
-        return this.numElementos == 0;
+        return this.elementos.isEmpty();
     }
 
     public void barajar() {
-        for (int i = 0; i < numElementos; i++) {
-            int x = (int) (Math.random() * numElementos);
-            E temp = elementos[i];
-            elementos[i] = elementos[x];
-            elementos[x] = temp;
+
+        for (E ele : elementos) {
+
+            int rand = (int) (Math.random() * 10);
+            if (rand <= 5) {
+                elementos.remove(ele);
+                elementos.add(ele);
+            }
+
         }
+
     }
 
-    @Override
     public E primero() throws NullPointerException {
-        return elementos[0];
+        return this.elementos.peek();
     }
 
-    @Override
     public E suprimir() throws NullPointerException {
-        E elemento = this.elementos[0];
-        for (int i = 0; i < numElementos - 1; i++) {
-            this.elementos[i] = this.elementos[i + 1];
-        }
-        this.numElementos--;
-        return elemento;
+        return this.elementos.remove();
     }
 
-    @Override
     public void insertar(E e) throws IllegalArgumentException {
-        this.elementos[this.numElementos] = e;
-        this.numElementos++;
+        this.elementos.add(e);
     }
 
 }

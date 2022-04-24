@@ -2,34 +2,34 @@ package core;
 
 import java.util.ArrayList;
 import java.util.List;
-import lista.Lista;
-import lista.ListaEnlazada;
-import pila.EnlazadaPila;
-import pila.Pila;
+import java.util.Stack;
 
 public class Mano<E> {
 
-    private List<Pila<E>> zona;
+    private List<Stack<E>> zona;
 
     public Mano() {
-        zona = new ArrayList<Pila<E>>();
+        zona = new ArrayList<Stack<E>>();
     }
 
     public int existePilaElemento(E elemento) {
         for (int i = 0; i < zona.size(); i++) {
-            Pila<E> pila = zona.get(i);
-            if (!pila.esVacio() && pila.top().equals(elemento)) {
+            Stack<E> pila = zona.get(i);
+            if (!pila.empty() && pila.peek().equals(elemento)) {
                 return i;
             }
         }
         return -1;
     }
 
-    public Lista<Carta.AVE> especiesDisponibles() {
-        Lista<Carta.AVE> lista = new ListaEnlazada<>();
-        for (Pila<E> pila : zona) {
-            Carta carta = (Carta) pila.top();
-            lista.insertarFinal(carta.getNombre());
+    public List<Carta.AVE> especiesDisponibles(boolean minTamBandada) {
+        List<Carta.AVE> lista = new ArrayList<>();
+        for (Stack<E> pila : zona) {
+            Carta carta = (Carta) pila.peek();
+            if (minTamBandada && pila.size() < carta.getBandadaPequena()) {
+                continue;
+            }
+            lista.add(carta.getNombre());
         }
         return lista;
     }
@@ -39,13 +39,13 @@ public class Mano<E> {
         if (pos != -1) {
             zona.get(pos).push(elemento);
         } else {
-            Pila<E> nuevaPila = new EnlazadaPila<>();
+            Stack<E> nuevaPila = new Stack<>();
             nuevaPila.push(elemento);
             zona.add(nuevaPila);
         }
     }
 
-    public Pila<E> eliminarElementos(E elementoTipo) throws Exception {
+    public Stack<E> eliminarElementos(E elementoTipo) throws Exception {
         int pos = existePilaElemento(elementoTipo);
         if (pos == -1) {
             throw new Exception("No existe ese tipo en la mano");
@@ -57,22 +57,22 @@ public class Mano<E> {
     public boolean esSuficiente(Carta carta) {
         int pos = existePilaElemento((E) carta);
         if (pos != -1) {
-            return zona.get(pos).tamaño() >= carta.getBandadaPequena();
+            return zona.get(pos).size() >= carta.getBandadaPequena();
         }
         return false;
     }
 
     public int getNumElementos() {
         int contador = 0;
-        for (Pila<E> pila : zona) {
-            contador += pila.tamaño();
+        for (Stack<E> pila : zona) {
+            contador += pila.size();
         }
         return contador;
     }
 
     public void pintar() {
-        for (Pila<E> pila : zona) {
-            System.out.println("Pila de " + pila.top() + " | " + pila.tamaño());
+        for (Stack<E> pila : zona) {
+            System.out.println("Pila de " + pila.peek() + " | " + pila.size());
         }
     }
 

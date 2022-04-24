@@ -2,22 +2,20 @@ package core;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import pila.EnlazadaPila;
-import pila.Pila;
+import java.util.Stack;
 
 public class ZonaJuego<E> {
 
-    private List<Pila<E>> zona;
+    private List<Stack<E>> zona;
 
     public ZonaJuego() {
-        zona = new ArrayList<Pila<E>>();
+        zona = new ArrayList<Stack<E>>();
     }
 
     public int existePilaAve(E elemento) {
         for (int i = 0; i < zona.size(); i++) {
-            Pila<E> pila = zona.get(i);
-            if (!pila.esVacio() && pila.top().equals(elemento)) {
+            Stack<E> pila = zona.get(i);
+            if (!pila.isEmpty() && pila.peek().equals(elemento)) {
                 return i;
             }
         }
@@ -29,7 +27,7 @@ public class ZonaJuego<E> {
         if (pos != -1) {
             zona.get(pos).push(elemento);
         } else {
-            Pila<E> nuevaPila = new EnlazadaPila<>();
+            Stack<E> nuevaPila = new Stack<>();
             nuevaPila.push(elemento);
             zona.add(nuevaPila);
         }
@@ -37,10 +35,10 @@ public class ZonaJuego<E> {
 
     public String cartasPorEspecie() {
         String m = "";
-        for (Pila<E> pila : zona) {
-            if (!pila.esVacio()) {
-                Carta carta = (Carta) pila.top();
-                m += carta.getNombre() + " - " + pila.tamaño() + "\n";
+        for (Stack<E> pila : zona) {
+            if (!pila.isEmpty()) {
+                Carta carta = (Carta) pila.peek();
+                m += carta.getNombre() + " - " + pila.size() + "\n";
             }
         }
         return m;
@@ -48,8 +46,8 @@ public class ZonaJuego<E> {
 
     public int getNumEspecies() {
         int numEspecies = 0;
-        for (Pila<E> pila : zona) {
-            if (!pila.esVacio()) {
+        for (Stack<E> pila : zona) {
+            if (!pila.isEmpty()) {
                 numEspecies++;
             }
         }
@@ -58,15 +56,15 @@ public class ZonaJuego<E> {
 
     public int getNumCartas() {
         int total = 0;
-        for (Pila<E> pila : zona) {
-            total += pila.tamaño();
+        for (Stack<E> pila : zona) {
+            total += pila.size();
         }
         return total;
     }
 
-    public <Carta> void pintar() {
-        for (Pila<E> pila : zona) {
-            System.out.println("Pila de " + pila.top() + " | " + pila.tamaño());
+    public void pintar() {
+        for (Stack<E> pila : zona) {
+            System.out.println("Pila de " + pila.peek() + " | " + pila.size());
         }
     }
 
