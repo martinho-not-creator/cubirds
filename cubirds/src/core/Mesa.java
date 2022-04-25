@@ -90,10 +90,13 @@ public class Mesa<E> {
         List<E> elementos = new ArrayList<>();
 
         List<E> fila = tablero[numFila];
-        List<E> copiaFila = fila;
+
+        List<E> copiaFila = new ArrayList<>();
+        for (E ele : fila) {
+            copiaFila.add(ele);
+        }
 
         int contadorDistintos = 0;
-        int contador = 0;
 
         if (contarEnFila(fila, elemento, true) > 1) { // Existe en esa fila elementos repetidos
 
@@ -101,30 +104,28 @@ public class Mesa<E> {
 
                 while (contarEnFila(copiaFila, elemento, true) > 0) {
 
-                    E elementoExtraido = fila.remove(contador);
+                    E elementoExtraido = copiaFila.remove(0);
 
                     if (!elementoExtraido.equals(elemento)) {
                         contadorDistintos++;
                     }
+
                     elementos.add(elemento);
-                    contador++;
 
                 }
 
             } else { // De derecha a izquierda
 
-                contador = fila.size() - 1;
-
                 while (contarEnFila(copiaFila, elemento, true) > 0) {
 
-                    E elementoExtraido = fila.remove(contador);
+                    int pos = copiaFila.size() - 1;
+                    E elementoExtraido = copiaFila.remove(pos);
 
                     if (!elementoExtraido.equals(elemento)) {
                         contadorDistintos++;
                     }
 
                     elementos.add(elementoExtraido);
-                    contador--;
 
                 }
 
