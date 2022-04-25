@@ -29,6 +29,7 @@ public class ES {
                     if (c == pos) {
                         especie = especieDisponible;
                     }
+                    c++;
                 }
 
                 esValido = true;

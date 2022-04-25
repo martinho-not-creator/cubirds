@@ -31,7 +31,7 @@ public class Juego {
     public static void inicio() {
 
         Baraja<Carta> baraja = inicializarBaraja();
-
+        
         MontonDescartes<Carta> descartes = inicializarMontonDescartes();
 
         Mesa<Carta> mesa = inicializarMesa(baraja);
@@ -182,8 +182,8 @@ public class Juego {
         Stack<Carta> cartasMano = jugador.eliminarCartasMano(cartaBajar);
 
         // Posiciones para colocar las cartas
-        char lado = leeLado("Introduce el lado para bajar " + cartaBajar.getNombre());
-        int fila = leeEntero("Introduce la fila para bajar " + cartaBajar.getNombre(), true, 0, NUM_FILAS);
+        char lado = leeLado("Introduce el lado para bajar " + cartaBajar.getNombre() + ": ");
+        int fila = leeEntero("Introduce la fila para bajar " + cartaBajar.getNombre() + ": ", true, 0, NUM_FILAS - 1);
 
         // Colocamos las cartas en la mesa segun el lado y la fila indicada
         if (lado == 'd') {
@@ -198,7 +198,8 @@ public class Juego {
 
         // Comprobamos si rodeamos cartas
         List<Carta> eliminadas = mesa.eliminarRodeadas(fila, cartaBajar, lado);
-
+        System.out.println("Rodeaste: " + eliminadas.size());
+        
         // Se han eliminado cartas se agregan a la mano
         if (!eliminadas.isEmpty()) {
 

@@ -1,6 +1,7 @@
 package core;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Queue;
 
 public class Baraja<E> {
@@ -8,7 +9,7 @@ public class Baraja<E> {
     private Queue<E> elementos;
 
     public Baraja(int numMaxElementos) {
-        elementos = new ArrayDeque<>();
+        elementos = new ArrayDeque<>(numMaxElementos);
     }
 
     public int tamaño() {
@@ -21,14 +22,13 @@ public class Baraja<E> {
 
     public void barajar() {
 
-        for (E ele : elementos) {
+        ArrayList<E> temp = new ArrayList<>(elementos);
+        elementos.clear();
 
-            int rand = (int) (Math.random() * 10);
-            if (rand <= 5) {
-                elementos.remove(ele);
-                elementos.add(ele);
-            }
-
+        for (int i = 0; i < temp.size(); i++) {
+            int x = (int) (Math.random() * temp.size());
+            E tempEle = temp.get(x);
+            elementos.add(tempEle);
         }
 
     }

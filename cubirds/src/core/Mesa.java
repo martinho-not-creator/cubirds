@@ -3,7 +3,6 @@ package core;
 import iu.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 
 public class Mesa<E> {
 
@@ -39,7 +38,7 @@ public class Mesa<E> {
                 }
             }
 
-            while (contador < 3) {
+            while (contador < 2 || fila.size() < 3) {
 
                 if (!baraja.esVacio()) {
 
@@ -91,59 +90,53 @@ public class Mesa<E> {
         List<E> elementos = new ArrayList<>();
 
         List<E> fila = tablero[numFila];
+        List<E> copiaFila = fila;
 
-        boolean cargando = false;
+        int contadorDistintos = 0;
+        int contador = 0;
 
         if (contarEnFila(fila, elemento, true) > 1) { // Existe en esa fila elementos repetidos
 
             if (lado == 'i') { // De izquierda a derecha
 
-                for (E ele : fila) {
+                while (contarEnFila(copiaFila, elemento, true) > 0) {
 
-                    elementos.add(ele);
+                    E elementoExtraido = fila.remove(contador);
 
-                    if (!ele.equals(elemento)) { // Me encuentro con el primero que no es igual
-
-                        cargando = true;
-
-                    } else { // Los elementos son iguales
-
-                        if (cargando = true) { // Si ya hemos visto uno distinto al siguiente igual se termina
-
-                            break;
-
-                        }
-
+                    if (!elementoExtraido.equals(elemento)) {
+                        contadorDistintos++;
                     }
+                    elementos.add(elemento);
+                    contador++;
 
                 }
 
-            } else { // De izquierda a derecha
+            } else { // De derecha a izquierda
 
-                ListIterator itr = fila.listIterator();
+                contador = fila.size() - 1;
 
-                for (int i = 0; i < fila.size(); i++) {
+                while (contarEnFila(copiaFila, elemento, true) > 0) {
 
-                    E ele = (E) itr.previous();
-                    elementos.add(ele);
+                    E elementoExtraido = fila.remove(contador);
 
-                    if (!ele.equals(elemento)) { // Me encuentro con el primero que no es igual
-
-                        cargando = true;
-
-                    } else { // Los elementos son iguales
-
-                        if (cargando = true) { // Si ya hemos visto uno distinto al anterior igual se termina
-
-                            break;
-
-                        }
-
+                    if (!elementoExtraido.equals(elemento)) {
+                        contadorDistintos++;
                     }
+
+                    elementos.add(elementoExtraido);
+                    contador--;
 
                 }
 
             }
+        }
+
+        // No hemos encontrado ningun distinto no se actualiza la fila ni se devuelve ningun elemento
+        if (contadorDistintos == 0) {
+            elementos.clear();
+        } else {
+            // Al encontrar elementos distintos a lo que queremos insertar actualizamos la fila a la modificadda
+            tablero[numFila] = copiaFila;
         }
 
         return elementos;
@@ -152,24 +145,7 @@ public class Mesa<E> {
 
     public void colocarCartasInicio(Baraja baraja) {
 
-        for (int i = 0; i < tablero.length; i++) {
-
-            int contador = 0;
-
-            while (contador < 3) {
-
-                Carta nuevaCarta = (Carta) baraja.suprimir();
-
-                if (!existeEnFila(tablero[i], (E) nuevaCarta)) {
-                    tablero[i].add((E) nuevaCarta);
-                    contador++;
-                } else {
-                    baraja.insertar(nuevaCarta);
-                }
-
-            }
-
-        }
+        rellenarFilas(baraja);
 
     }
 
