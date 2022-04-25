@@ -34,7 +34,7 @@ public class Mesa<E> {
             int contador = 0;
 
             for (Carta.AVE especie : Carta.AVE.values()) {
-                if (existeEnFila(fila, (E) especie)) {
+                if (existeEnFila(fila, (E) new Carta(especie))) {
                     contador++;
                 }
             }

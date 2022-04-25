@@ -13,10 +13,10 @@ import static iu.ES.leeLado;
 import static iu.ES.leeEntero;
 import static iu.ES.leeDecision;
 import static iu.ES.leeCadena;
+import java.util.ArrayDeque;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
+import java.util.Queue;
 import java.util.Stack;
 
 public class Juego {
@@ -37,7 +37,7 @@ public class Juego {
         Mesa<Carta> mesa = inicializarMesa(baraja);
 
         int numJugadores = leeEntero("Numero de jugadores: ", true, 2, 5);
-        List<Jugador> jugadores = new ArrayList<>();
+        Queue<Jugador> jugadores = new ArrayDeque<Jugador>();
 
         for (int i = 0; i < numJugadores; i++) {
             Jugador nuevoJugador = inicializarJugador(baraja);
@@ -48,7 +48,7 @@ public class Juego {
 
     }
 
-    public static void iniciarJuego(List<Jugador> jugadores, Mesa<Carta> mesa, MontonDescartes<Carta> montonDescartes, Baraja<Carta> baraja) {
+    public static void iniciarJuego(Queue<Jugador> jugadores, Mesa<Carta> mesa, MontonDescartes<Carta> montonDescartes, Baraja<Carta> baraja) {
 
         boolean hayGanador = false;
         Jugador jugadorActual = null;
@@ -57,11 +57,10 @@ public class Juego {
 
             boolean decision;
 
-            ListIterator itr = jugadores.listIterator();
-
             while (!hayGanador && !baraja.esVacio()) {
 
-                jugadorActual = (Jugador) itr.previous();
+                jugadorActual = jugadores.remove();
+                jugadores.add(jugadorActual);
 
                 System.out.println("Turno del jugador: " + jugadorActual);
 
@@ -106,7 +105,7 @@ public class Juego {
 
         } catch (Exception e) {
 
-            System.err.println(e.getMessage());
+            System.err.println(e.getStackTrace()[0]);
 
         }
 
@@ -119,7 +118,7 @@ public class Juego {
 
     }
 
-    public static Jugador revisarGanador(List<Jugador> jugadores) {
+    public static Jugador revisarGanador(Queue<Jugador> jugadores) {
         Jugador ganador = null;
         int max = -1;
         for (Jugador jugador : jugadores) {
