@@ -14,6 +14,7 @@ import static iu.ES.leeEntero;
 import static iu.ES.leeDecision;
 import static iu.ES.leeCadena;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 
 import java.util.List;
 import java.util.Queue;
@@ -38,12 +39,7 @@ public class Juego {
         Mesa<Carta> mesa = inicializarMesa(baraja);
 
         int numJugadores = leeEntero("Numero de jugadores: ", true, 2, 5);
-        Queue<Jugador> jugadores = new ArrayDeque<Jugador>();
-
-        for (int i = 0; i < numJugadores; i++) {
-            Jugador nuevoJugador = inicializarJugador(baraja);
-            jugadores.add(nuevoJugador);
-        }
+        Queue<Jugador> jugadores = inicializarJugadores(numJugadores, baraja);
 
         iniciarJuego(jugadores, mesa, descartes, baraja);
 
@@ -56,12 +52,11 @@ public class Juego {
 
         // Flag que nos indica si se ha rellenado la mano del jugador y las filas de la mesa si necesario
         boolean completadasTareas = true;
+        boolean decision;
 
-        try {
+        while (!hayGanador && completadasTareas) {
 
-            boolean decision;
-
-            while (!hayGanador && completadasTareas) {
+            try {
 
                 jugadorActual = jugadores.remove();
                 jugadores.add(jugadorActual);
@@ -110,32 +105,47 @@ public class Juego {
 
                 }
 
+            } catch (Exception e) {
+
+                System.err.println("Error en el turno del jugador: " + jugadorActual);
+                System.err.println("Tengase en cuenta que puede haber fallos de aqui en adelante");
+                System.err.println(e.getStackTrace()[0]);
+
             }
-
-        } catch (Exception e) {
-
-            System.err.println(e.getStackTrace()[0]);
 
         }
 
         if (hayGanador) {
             System.out.println("Ha ganado el jugador: " + jugadorActual);
         } else {
-            Jugador ganador = revisarGanador(jugadores);
-            System.out.println("Ha ganado el jugador: " + ganador);
+            List<Jugador> ganadores = revisarGanador(jugadores);
+            if (ganadores.size() == 1) {
+                System.out.println("Ha ganado el jugador: " + ganadores.get(0));
+            } else {
+                StringBuilder builder = new StringBuilder();
+                builder.append("Empate entre: ");
+                for (Jugador ganador : ganadores) {
+                    builder.append(ganador).append(", ");
+                }
+                builder.deleteCharAt(builder.toString().length() - 1);
+                System.out.println(builder.toString());
+            }
         }
 
     }
 
-    public static Jugador revisarGanador(Queue<Jugador> jugadores) {
-        Jugador ganador = null;
+    public static List<Jugador> revisarGanador(Queue<Jugador> jugadores) {
+        List<Jugador> ganadores = new ArrayList<>();
         int max = -1;
         for (Jugador jugador : jugadores) {
             if (jugador.numEspeciesDistintasZonaJuego() > max) {
-                ganador = jugador;
+                ganadores.clear();
+                ganadores.add(jugador);
+            } else if (jugador.numEspeciesDistintasZonaJuego() == max) {
+                ganadores.add(jugador);
             }
         }
-        return ganador;
+        return ganadores;
     }
 
     public static boolean rellenarFilas(Mesa<Carta> mesa, Baraja<Carta> baraja) {
@@ -253,13 +263,13 @@ public class Juego {
         return montonDescartes;
     }
 
-    public static Mesa<Carta> inicializarMesa(Baraja baraja) {
+    public static Mesa<Carta> inicializarMesa(Baraja<Carta> baraja) {
         Mesa<Carta> mesa = new Mesa<>();
         mesa.colocarCartasInicio(baraja);
         return mesa;
     }
 
-    public static Jugador inicializarJugador(Baraja baraja) {
+    public static Jugador inicializarJugador(Baraja<Carta> baraja) {
 
         Mano mano = new Mano();
 
@@ -273,6 +283,32 @@ public class Juego {
         String nombre = leeCadena("Introduce el nombre del jugador: ", false);
 
         return new Jugador(nombre, zona, mano);
+
+    }
+
+    public static Queue<Jugador> inicializarJugadores(int numJugadores, Baraja<Carta> baraja) {
+
+        List<Jugador> jugadores = new ArrayList<>(numJugadores);
+
+        // Metemos los jugadores en la lista
+        for (int i = 0; i < numJugadores; i++) {
+            jugadores.add(inicializarJugador(baraja));
+        }
+
+        // Desordenamos la lista
+        for (int i = 0; i < jugadores.size(); i++) {
+            int x = (int) (Math.random() * jugadores.size());
+            Jugador tempEle = jugadores.remove(x);
+            jugadores.add(tempEle);
+        }
+
+        Queue<Jugador> cola = new ArrayDeque<>();
+        // Metemos los jugadores en una cola
+        for (Jugador jugador : jugadores) {
+            cola.add(jugador);
+        }
+
+        return cola;
 
     }
 

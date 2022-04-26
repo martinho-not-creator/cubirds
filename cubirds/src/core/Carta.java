@@ -1,5 +1,7 @@
 package core;
 
+import static iu.ES.centerString;
+
 public class Carta {
 
     public static enum AVE {
@@ -45,7 +47,7 @@ public class Carta {
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("[ ")
-                .append(nombre)
+                .append(centerString(10, nombre.toString()))
                 .append("(")
                 .append(bandadaPequena)
                 .append("/")

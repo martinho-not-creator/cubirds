@@ -8,6 +8,10 @@ public class ES {
 
     public static final Scanner teclado = new Scanner(System.in);
 
+    public static String centerString(int width, String s) {
+        return String.format("%-" + width + "s", String.format("%" + (s.length() + (width - s.length()) / 2) + "s", s));
+    }
+
     public static Carta.AVE leeEspecie(String mensaje, List<Carta.AVE> especiesDisponibles) {
 
         Carta.AVE especie = null;
