@@ -150,12 +150,6 @@ public class Mesa<E> {
 
     }
 
-    public void colocarCartasInicio(Baraja baraja) {
-
-        rellenarFilas(baraja);
-
-    }
-
     public void insertarDerecha(int fila, E elemento) {
         tablero[fila].add(elemento);
     }

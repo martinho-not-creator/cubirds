@@ -175,7 +175,7 @@ public class Juego {
             jugador.anadirCartasZonaJuego(pilaCartas.pop());
 
             for (Carta carta : pilaCartas) {
-                montonDescartes.push(carta);
+                montonDescartes.insertar(carta);
             }
 
         }
@@ -265,7 +265,7 @@ public class Juego {
 
     public static Mesa<Carta> inicializarMesa(Baraja<Carta> baraja) {
         Mesa<Carta> mesa = new Mesa<>();
-        mesa.colocarCartasInicio(baraja);
+        mesa.rellenarFilas(baraja);
         return mesa;
     }
 

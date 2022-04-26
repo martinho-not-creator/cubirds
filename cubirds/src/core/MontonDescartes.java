@@ -18,15 +18,15 @@ public class MontonDescartes<E> {
         return this.elementos.isEmpty();
     }
 
-    public E top() throws NullPointerException {
+    public E primero() throws NullPointerException {
         return this.elementos.peek();
     }
 
-    public void push(E elemento) {
+    public void insertar(E elemento) {
         this.elementos.push(elemento);
     }
 
-    public E pop() throws NullPointerException {
+    public E eliminar() throws NullPointerException {
         return this.elementos.pop();
     }
 

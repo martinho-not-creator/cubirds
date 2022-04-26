@@ -39,7 +39,7 @@ public class Mano<E> {
         List<Carta.AVE> lista = new ArrayList<>();
         for (Stack<E> pila : zona) {
             Carta carta = (Carta) pila.peek();
-            if (minTamBandada && pila.size() < carta.getBandadaPequena()) {
+            if (minTamBandada && !esSuficiente(carta)) {
                 continue;
             }
             lista.add(carta.getNombre());

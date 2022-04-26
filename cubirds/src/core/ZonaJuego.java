@@ -33,17 +33,6 @@ public class ZonaJuego<E> {
         }
     }
 
-    public String cartasPorEspecie() {
-        String m = "";
-        for (Stack<E> pila : zona) {
-            if (!pila.isEmpty()) {
-                Carta carta = (Carta) pila.peek();
-                m += carta.getNombre() + " - " + pila.size() + "\n";
-            }
-        }
-        return m;
-    }
-
     public int getNumEspecies() {
         int numEspecies = 0;
         for (Stack<E> pila : zona) {
