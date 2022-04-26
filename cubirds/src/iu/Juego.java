@@ -27,11 +27,12 @@ public class Juego {
     public static final int NUM_CARTAS_MANO_JUGADOR = 8;
     public static final int NUM_CARTAS_ROBAR = 2;
     public static final int NUM_ESPECIES_VICTORIA = 7;
+    public static final int NUM_MIN_ESPECIES_FILA = 2;
 
     public static void inicio() {
 
         Baraja<Carta> baraja = inicializarBaraja();
-        
+
         MontonDescartes<Carta> descartes = inicializarMontonDescartes();
 
         Mesa<Carta> mesa = inicializarMesa(baraja);
@@ -53,11 +54,14 @@ public class Juego {
         boolean hayGanador = false;
         Jugador jugadorActual = null;
 
+        // Flag que nos indica si se ha rellenado la mano del jugador y las filas de la mesa si necesario
+        boolean completadasTareas = true;
+
         try {
 
             boolean decision;
 
-            while (!hayGanador && !baraja.esVacio()) {
+            while (!hayGanador && completadasTareas) {
 
                 jugadorActual = jugadores.remove();
                 jugadores.add(jugadorActual);
@@ -91,13 +95,18 @@ public class Juego {
 
                 if (!hayGanador) {
 
+                    boolean completadaMano = false;
+                    boolean completadaFilas = false;
+
                     // Rellenamos la mano del jugador si no tiene cartas
-                    if (jugadorActual.numCartasMano() == 0) {
-                        rellenarMano(jugadorActual, baraja);
-                    }
+                    completadaMano = rellenarMano(jugadorActual, baraja);
 
                     // Rellenamos las filas si no tienen 2 especies distintas
-                    rellenarFilas(mesa, baraja);
+                    completadaFilas = rellenarFilas(mesa, baraja);
+
+                    if (!completadaMano || !completadaFilas) {
+                        completadasTareas = false;
+                    }
 
                 }
 
@@ -129,16 +138,12 @@ public class Juego {
         return ganador;
     }
 
-    public static void rellenarFilas(Mesa<Carta> mesa, Baraja<Carta> baraja) {
-        mesa.rellenarFilas(baraja);
+    public static boolean rellenarFilas(Mesa<Carta> mesa, Baraja<Carta> baraja) {
+        return mesa.rellenarFilas(baraja);
     }
 
-    public static void rellenarMano(Jugador jugador, Baraja<Carta> baraja) {
-        int cartasInsertadas = 0;
-        for (int i = 0; i < NUM_CARTAS_MANO_JUGADOR && !baraja.esVacio(); i++) {
-            jugador.anadirCartaMano(baraja.suprimir());
-            cartasInsertadas++;
-        }
+    public static boolean rellenarMano(Jugador jugador, Baraja<Carta> baraja) {
+        return jugador.rellenarMano(baraja);
     }
 
     public static boolean comprobarVictoria(Jugador jugador) {
@@ -199,7 +204,7 @@ public class Juego {
         // Comprobamos si rodeamos cartas
         List<Carta> eliminadas = mesa.eliminarRodeadas(fila, cartaBajar, lado);
         System.out.println("Rodeaste: " + eliminadas.size());
-        
+
         // Se han eliminado cartas se agregan a la mano
         if (!eliminadas.isEmpty()) {
 
@@ -213,7 +218,7 @@ public class Juego {
 
             if (leeDecision("Quieres robar cartas: ")) {
 
-                for (int i = 0; i < NUM_CARTAS_ROBAR; i++) {
+                for (int i = 0; i < NUM_CARTAS_ROBAR && !baraja.esVacio(); i++) {
                     jugador.anadirCartaMano(baraja.suprimir());
                 }
 

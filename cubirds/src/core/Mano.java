@@ -1,5 +1,6 @@
 package core;
 
+import static iu.Juego.NUM_CARTAS_MANO_JUGADOR;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -10,6 +11,18 @@ public class Mano<E> {
 
     public Mano() {
         zona = new ArrayList<Stack<E>>();
+    }
+
+    public boolean rellenar(Baraja<E> baraja) {
+        int cartasInsertadas = 0;
+        for (int i = getNumElementos(); i < NUM_CARTAS_MANO_JUGADOR; i++) {
+            if (baraja.esVacio()) {
+                return false;
+            }
+            insertar(baraja.suprimir());
+            cartasInsertadas++;
+        }
+        return true;
     }
 
     public int existePilaElemento(E elemento) {

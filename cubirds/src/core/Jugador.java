@@ -19,6 +19,10 @@ public class Jugador {
         return nombre;
     }
 
+    public boolean rellenarMano(Baraja<Carta> baraja) {
+        return mano.rellenar(baraja);
+    }
+
     public void anadirCartaMano(Carta carta) {
         mano.insertar(carta);
     }

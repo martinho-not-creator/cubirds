@@ -1,6 +1,8 @@
 package core;
 
 import iu.*;
+import static iu.Juego.NUM_CARTAS_INICIALES_FILA;
+import static iu.Juego.NUM_MIN_ESPECIES_FILA;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +28,7 @@ public class Mesa<E> {
         return false;
     }
 
-    public void rellenarFilas(Baraja<E> baraja) {
+    public boolean rellenarFilas(Baraja<E> baraja) {
 
         for (List<E> fila : tablero) {
 
@@ -38,28 +40,32 @@ public class Mesa<E> {
                 }
             }
 
-            while (contador < 2 || fila.size() < 3) {
+            while (contador < NUM_MIN_ESPECIES_FILA || fila.size() < NUM_CARTAS_INICIALES_FILA) {
 
-                if (!baraja.esVacio()) {
+                if (baraja.esVacio()) {
 
-                    Carta nuevaCarta = (Carta) baraja.suprimir();
+                    return false;
 
-                    if (!existeEnFila(fila, (E) nuevaCarta)) {
+                }
 
-                        fila.add((E) nuevaCarta);
-                        contador++;
+                Carta nuevaCarta = (Carta) baraja.suprimir();
 
-                    } else {
+                if (!existeEnFila(fila, (E) nuevaCarta)) {
 
-                        baraja.insertar((E) nuevaCarta);
+                    fila.add((E) nuevaCarta);
+                    contador++;
 
-                    }
+                } else {
+
+                    baraja.insertar((E) nuevaCarta);
 
                 }
 
             }
 
         }
+
+        return true;
 
     }
 
