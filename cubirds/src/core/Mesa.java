@@ -161,10 +161,15 @@ public class Mesa<E> {
     public void pintar() {
 
         for (List<E> tablero1 : tablero) {
+
             for (E elemento : tablero1) {
+
                 System.out.print(elemento);
+
             }
-            System.out.println("");
+
+            System.out.println();
+
         }
 
     }

@@ -22,7 +22,6 @@ import java.util.Stack;
 
 public class Juego {
 
-    public static final int NUM_CARTAS = 110;
     public static final int NUM_FILAS = 4;
     public static final int NUM_CARTAS_INICIALES_FILA = 3;
     public static final int NUM_CARTAS_MANO_JUGADOR = 8;
@@ -62,6 +61,7 @@ public class Juego {
                 jugadores.add(jugadorActual);
 
                 System.out.println("Turno del jugador: " + jugadorActual);
+                System.out.println("Tamaño de la baraja: " + baraja.tamaño());
 
                 mesa.pintar();
 
@@ -243,7 +243,7 @@ public class Juego {
 
     public static Baraja<Carta> inicializarBaraja() {
 
-        Baraja<Carta> baraja = new Baraja<>(NUM_CARTAS);
+        Baraja<Carta> baraja = new Baraja<>();
         Carta.AVE[] aves = Carta.AVE.values();
 
         for (int i = 0; i < aves.length; i++) {

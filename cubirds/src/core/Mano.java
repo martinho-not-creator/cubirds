@@ -14,13 +14,11 @@ public class Mano<E> {
     }
 
     public boolean rellenar(Baraja<E> baraja) {
-        int cartasInsertadas = 0;
         for (int i = getNumElementos(); i < NUM_CARTAS_MANO_JUGADOR; i++) {
             if (baraja.esVacio()) {
                 return false;
             }
             insertar(baraja.suprimir());
-            cartasInsertadas++;
         }
         return true;
     }

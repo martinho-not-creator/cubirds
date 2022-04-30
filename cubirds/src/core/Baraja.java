@@ -8,8 +8,8 @@ public class Baraja<E> {
 
     private Queue<E> elementos;
 
-    public Baraja(int numMaxElementos) {
-        elementos = new ArrayDeque<>(numMaxElementos);
+    public Baraja() {
+        elementos = new ArrayDeque<>();
     }
 
     public int tamaño() {
