@@ -25,9 +25,11 @@ public class Baraja<E> {
         ArrayList<E> temp = new ArrayList<>(elementos);
         elementos.clear();
 
-        for (int i = 0; i < temp.size(); i++) {
-            int x = (int) (Math.random() * temp.size());
-            E tempEle = temp.get(x);
+        int x;
+        
+        while (!temp.isEmpty()) {
+            x = (int) (Math.random() * temp.size());
+            E tempEle = temp.remove(x);
             elementos.add(tempEle);
         }
 
