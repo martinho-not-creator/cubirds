@@ -19,9 +19,7 @@ public class Mesa<E> {
     public boolean existeEnFila(List<E> fila, E elemento) {
         for (E element : fila) {
             if (element.equals(elemento)) {
-                {
-                    return true;
-                }
+                return true;
             }
         }
         return false;
@@ -116,7 +114,7 @@ public class Mesa<E> {
 
             if (lado == 'i') { // De izquierda a derecha
 
-                while (contarEnFila(copiaFila, elemento, true) > 0) {
+                while (existeEnFila(copiaFila, elemento)) {
 
                     E elementoExtraido = copiaFila.remove(0);
 
@@ -130,7 +128,7 @@ public class Mesa<E> {
 
             } else { // De derecha a izquierda
 
-                while (contarEnFila(copiaFila, elemento, true) > 0) {
+                while (existeEnFila(copiaFila, elemento)) {
 
                     int pos = copiaFila.size() - 1;
                     E elementoExtraido = copiaFila.remove(pos);

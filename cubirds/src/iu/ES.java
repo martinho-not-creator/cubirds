@@ -15,13 +15,13 @@ public class ES {
     public static Carta.AVE leeEspecie(String mensaje, List<Carta.AVE> especiesDisponibles) {
 
         Carta.AVE especie = null;
-        boolean esValido = false;
+        boolean esValido;
 
         do {
             try {
 
                 System.out.println("Dispones de estas opciones: ");
-                
+
                 int c = 0;
                 for (Carta.AVE especieDisponible : especiesDisponibles) {
                     System.out.println(c + " - " + especieDisponible);
@@ -57,7 +57,7 @@ public class ES {
 
         char texto;
         boolean decision = false;
-        boolean esValido = false;
+        boolean esValido;
 
         do {
 
@@ -65,18 +65,15 @@ public class ES {
 
                 texto = leeCadena(mensaje, false).toLowerCase().charAt(0);
 
-                if (texto == 's') {
-
-                    decision = true;
-
-                } else if (texto == 'n') {
-
-                    decision = false;
-
-                } else {
-
-                    throw new Exception("La cadena introducida no es correcta");
-
+                switch (texto) {
+                    case 's':
+                        decision = true;
+                        break;
+                    case 'n':
+                        decision = false;
+                        break;
+                    default:
+                        throw new Exception("La cadena introducida no es correcta");
                 }
 
                 esValido = true;
@@ -129,7 +126,7 @@ public class ES {
     public static char leeLado(String mensaje) {
 
         char leer = ' ';
-        boolean esValido = false;
+        boolean esValido;
 
         do {
 
@@ -160,7 +157,7 @@ public class ES {
 
     public static int leeEntero(String msg, boolean rango, int min, int max) {
 
-        boolean esValido = false;
+        boolean esValido;
         int toret = 0;
 
         do {

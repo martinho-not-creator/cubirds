@@ -22,7 +22,13 @@ public class Jugador {
     }
 
     public boolean rellenarMano(Baraja<Carta> baraja) {
-        return mano.rellenar(baraja);
+        for (int i = mano.getNumElementos(); i < NUM_CARTAS_MANO_JUGADOR; i++) {
+            if (baraja.esVacio()) {
+                return false;
+            }
+            mano.insertar(baraja.suprimir());
+        }
+        return true;
     }
 
     public void anadirCartaMano(Carta carta) {
@@ -133,16 +139,6 @@ public class Jugador {
 
         private Mano() {
             zona = new ArrayList<Stack<E>>();
-        }
-
-        private boolean rellenar(Baraja<E> baraja) {
-            for (int i = getNumElementos(); i < NUM_CARTAS_MANO_JUGADOR; i++) {
-                if (baraja.esVacio()) {
-                    return false;
-                }
-                insertar(baraja.suprimir());
-            }
-            return true;
         }
 
         private int existePilaElemento(E elemento) {
