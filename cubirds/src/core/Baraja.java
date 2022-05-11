@@ -35,10 +35,6 @@ public class Baraja<E> {
 
     }
 
-    public E primero() throws NullPointerException {
-        return this.elementos.peek();
-    }
-
     public E suprimir() throws NullPointerException {
         return this.elementos.remove();
     }

@@ -1,6 +1,5 @@
 package core;
 
-import iu.*;
 import static iu.Juego.NUM_CARTAS_INICIALES_FILA;
 import static iu.Juego.NUM_MIN_ESPECIES_FILA;
 import java.util.ArrayList;
@@ -10,8 +9,8 @@ public class Mesa<E> {
 
     private List<E>[] tablero;
 
-    public Mesa() {
-        tablero = new ArrayList[Juego.NUM_FILAS];
+    public Mesa(int numFilas) {
+        tablero = new ArrayList[numFilas];
         for (int i = 0; i < tablero.length; i++) {
             tablero[i] = new ArrayList<>();
         }

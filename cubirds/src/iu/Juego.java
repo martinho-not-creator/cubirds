@@ -5,8 +5,6 @@ import core.Carta;
 import core.Mesa;
 import core.MontonDescartes;
 import core.Jugador;
-import core.Mano;
-import core.ZonaJuego;
 
 import static iu.ES.leeEspecie;
 import static iu.ES.leeLado;
@@ -87,8 +85,8 @@ public class Juego {
 
                 if (!hayGanador) {
 
-                    boolean completadaMano = false;
-                    boolean completadaFilas = false;
+                    boolean completadaMano;
+                    boolean completadaFilas;
 
                     // Rellenamos la mano del jugador si no tiene cartas
                     completadaMano = rellenarMano(jugadorActual, baraja);
@@ -261,25 +259,20 @@ public class Juego {
     }
 
     public static Mesa<Carta> inicializarMesa(Baraja<Carta> baraja) {
-        Mesa<Carta> mesa = new Mesa<>();
+        Mesa<Carta> mesa = new Mesa<>(NUM_FILAS);
         mesa.rellenarFilas(baraja);
         return mesa;
     }
 
     public static Jugador inicializarJugador(Baraja<Carta> baraja) {
 
-        Mano mano = new Mano();
-
-        for (int i = 0; i < NUM_CARTAS_MANO_JUGADOR; i++) {
-            mano.insertar(baraja.suprimir());
-        }
-
-        ZonaJuego zona = new ZonaJuego();
-        zona.insertar(baraja.suprimir());
-
         String nombre = leeCadena("Introduce el nombre del jugador: ", false);
+        Jugador nuevoJugador = new Jugador(nombre);
 
-        return new Jugador(nombre, zona, mano);
+        nuevoJugador.rellenarMano(baraja);
+        nuevoJugador.anadirCartasZonaJuego(baraja.suprimir());
+
+        return nuevoJugador;
 
     }
 

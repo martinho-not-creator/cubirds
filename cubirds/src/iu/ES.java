@@ -8,7 +8,7 @@ public class ES {
 
     public static final Scanner teclado = new Scanner(System.in);
 
-    public static String centerString(int width, String s) {
+    public static String centrarString(int width, String s) {
         return String.format("%-" + width + "s", String.format("%" + (s.length() + (width - s.length()) / 2) + "s", s));
     }
 
@@ -20,6 +20,8 @@ public class ES {
         do {
             try {
 
+                System.out.println("Dispones de estas opciones: ");
+                
                 int c = 0;
                 for (Carta.AVE especieDisponible : especiesDisponibles) {
                     System.out.println(c + " - " + especieDisponible);

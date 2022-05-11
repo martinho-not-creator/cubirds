@@ -1,6 +1,6 @@
 package core;
 
-import static iu.ES.centerString;
+import static iu.ES.centrarString;
 
 public class Carta {
 
@@ -38,16 +38,11 @@ public class Carta {
         return bandadaGrande;
     }
 
-    public static Carta generarCartaAleatoria() {
-        int n = (int) (Math.random() * AVE.values().length);
-        return new Carta(AVE.values()[n]);
-    }
-
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("[ ")
-                .append(centerString(10, nombre.toString()))
+                .append(centrarString(10, nombre.toString()))
                 .append("(")
                 .append(bandadaPequena)
                 .append("/")
