@@ -50,14 +50,23 @@ public class Mesa<E> {
 
                 Carta nuevaCarta = (Carta) baraja.suprimir();
 
-                if (!existeEnFila(fila, (E) nuevaCarta)) {
+                if (contador < NUM_MIN_ESPECIES_FILA) {
 
-                    fila.add((E) nuevaCarta);
-                    contador++;
+                    if (!existeEnFila(fila, (E) nuevaCarta)) {
+
+                        fila.add((E) nuevaCarta);
+                        contador++;
+
+                    } else {
+
+                        baraja.insertar((E) nuevaCarta);
+
+                    }
 
                 } else {
 
-                    baraja.insertar((E) nuevaCarta);
+                    fila.add((E) nuevaCarta);
+                    contador++;
 
                 }
 
