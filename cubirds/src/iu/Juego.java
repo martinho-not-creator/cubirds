@@ -66,10 +66,7 @@ public class Juego {
                 mesa.pintar();
 
                 // Jugar cartas
-                decision = leeDecision("Quieres jugar cartas: ");
-                if (decision) {
-                    jugarCartas(jugadorActual, mesa, baraja);
-                }
+                jugarCartas(jugadorActual, mesa, baraja);
 
                 // Completar bandadas
                 do {
