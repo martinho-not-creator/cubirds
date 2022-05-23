@@ -1,7 +1,8 @@
 package core;
 
-import static iu.Juego.NUM_CARTAS_INICIALES_FILA;
+import iu.Juego;
 import static iu.Juego.NUM_MIN_ESPECIES_FILA;
+import static iu.Juego.NUM_MIN_INICIAL_ESPECIES_FILA;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,15 +30,15 @@ public class Mesa {
 
         for (List<Carta> fila : tablero) {
 
-            int contador = 0;
+            int contadorEspeciesDistintas = 0;
 
             for (Carta.AVE especie : Carta.AVE.values()) {
                 if (existeEnFila(fila, especie)) {
-                    contador++;
+                    contadorEspeciesDistintas++;
                 }
             }
 
-            while ((esInicio && contador < NUM_MIN_ESPECIES_FILA) || fila.size() < NUM_CARTAS_INICIALES_FILA) {
+            while ((esInicio && contadorEspeciesDistintas < NUM_MIN_INICIAL_ESPECIES_FILA) || contadorEspeciesDistintas < NUM_MIN_ESPECIES_FILA) {
 
                 if (baraja.esVacio()) {
 
@@ -47,12 +48,12 @@ public class Mesa {
 
                 Carta nuevaCarta = baraja.suprimir();
 
-                if (esInicio && contador < NUM_MIN_ESPECIES_FILA) {
+                if ((esInicio && contadorEspeciesDistintas < Juego.NUM_MIN_INICIAL_ESPECIES_FILA)) {
 
                     if (!existeEnFila(fila, nuevaCarta.getNombre())) {
 
                         fila.add(nuevaCarta);
-                        contador++;
+                        contadorEspeciesDistintas++;
 
                     } else {
 
@@ -63,7 +64,12 @@ public class Mesa {
                 } else {
 
                     fila.add(nuevaCarta);
-                    contador++;
+
+                    if (!existeEnFila(fila, nuevaCarta.getNombre())) {
+
+                        contadorEspeciesDistintas++;
+
+                    }
 
                 }
 

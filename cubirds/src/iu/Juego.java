@@ -21,11 +21,11 @@ import java.util.Stack;
 public class Juego {
 
     public static final int NUM_FILAS = 4;
-    public static final int NUM_CARTAS_INICIALES_FILA = 3;
     public static final int NUM_CARTAS_MANO_JUGADOR = 8;
     public static final int NUM_CARTAS_ROBAR = 2;
     public static final int NUM_ESPECIES_VICTORIA = 7;
-    public static final int NUM_MIN_ESPECIES_FILA = 3;
+    public static final int NUM_MIN_ESPECIES_FILA = 2;
+    public static final int NUM_MIN_INICIAL_ESPECIES_FILA = 3;
 
     public static void inicio() {
 
