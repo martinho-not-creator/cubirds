@@ -21,7 +21,7 @@ public class Jugador {
         return nombre;
     }
 
-    public boolean rellenarMano(Baraja<Carta> baraja) {
+    public boolean rellenarMano(Baraja baraja) {
         for (int i = mano.getNumElementos(); i < NUM_CARTAS_MANO_JUGADOR; i++) {
             if (baraja.esVacio()) {
                 return false;
@@ -35,8 +35,8 @@ public class Jugador {
         mano.insertar(carta);
     }
 
-    public Stack<Carta> eliminarCartasMano(Carta carta) throws Exception {
-        return mano.eliminarElementos(carta);
+    public Stack<Carta> eliminarCartasMano(Carta.AVE especie) throws Exception {
+        return mano.eliminarElementos(especie);
     }
 
     public void anadirCartasZonaJuego(Carta carta) {
@@ -51,7 +51,7 @@ public class Jugador {
         return zonaJuego.getNumCartas();
     }
 
-    public int existeEspecieMano(Carta especie) {
+    public int existeEspecieMano(Carta.AVE especie) {
         return mano.existePilaElemento(especie);
     }
 
@@ -78,38 +78,38 @@ public class Jugador {
         return getNombre();
     }
 
-    private class ZonaJuego<E> {
+    private class ZonaJuego {
 
-        private List<Stack<E>> zona;
+        private List<Stack<Carta>> zona;
 
         private ZonaJuego() {
-            zona = new ArrayList<Stack<E>>();
+            zona = new ArrayList<Stack<Carta>>();
         }
 
-        private int existePilaAve(E elemento) {
+        private int existePilaAve(Carta.AVE especie) {
             for (int i = 0; i < zona.size(); i++) {
-                Stack<E> pila = zona.get(i);
-                if (!pila.isEmpty() && pila.peek().equals(elemento)) {
+                Stack<Carta> pila = zona.get(i);
+                if (!pila.isEmpty() && pila.peek().getNombre() == especie) {
                     return i;
                 }
             }
             return -1;
         }
 
-        private void insertar(E elemento) {
-            int pos = existePilaAve(elemento);
+        private void insertar(Carta carta) {
+            int pos = existePilaAve(carta.getNombre());
             if (pos != -1) {
-                zona.get(pos).push(elemento);
+                zona.get(pos).push(carta);
             } else {
-                Stack<E> nuevaPila = new Stack<>();
-                nuevaPila.push(elemento);
+                Stack<Carta> nuevaPila = new Stack<>();
+                nuevaPila.push(carta);
                 zona.add(nuevaPila);
             }
         }
 
         private int getNumEspecies() {
             int numEspecies = 0;
-            for (Stack<E> pila : zona) {
+            for (Stack<Carta> pila : zona) {
                 if (!pila.isEmpty()) {
                     numEspecies++;
                 }
@@ -119,32 +119,32 @@ public class Jugador {
 
         private int getNumCartas() {
             int total = 0;
-            for (Stack<E> pila : zona) {
+            for (Stack<Carta> pila : zona) {
                 total += pila.size();
             }
             return total;
         }
 
         private void pintar() {
-            for (Stack<E> pila : zona) {
+            for (Stack<Carta> pila : zona) {
                 System.out.println("Pila de " + pila.peek() + " | " + pila.size());
             }
         }
 
     }
 
-    private class Mano<E> {
+    private class Mano {
 
-        private List<Stack<E>> zona;
+        private List<Stack<Carta>> zona;
 
         private Mano() {
-            zona = new ArrayList<Stack<E>>();
+            zona = new ArrayList<Stack<Carta>>();
         }
 
-        private int existePilaElemento(E elemento) {
+        private int existePilaElemento(Carta.AVE especie) {
             for (int i = 0; i < zona.size(); i++) {
-                Stack<E> pila = zona.get(i);
-                if (!pila.empty() && pila.peek().equals(elemento)) {
+                Stack<Carta> pila = zona.get(i);
+                if (!pila.empty() && pila.peek().getNombre() == especie) {
                     return i;
                 }
             }
@@ -153,9 +153,9 @@ public class Jugador {
 
         private List<Carta.AVE> especiesDisponibles(boolean minTamBandada) {
             List<Carta.AVE> lista = new ArrayList<>();
-            for (Stack<E> pila : zona) {
-                Carta carta = (Carta) pila.peek();
-                if (minTamBandada && !esSuficiente(carta)) {
+            for (Stack<Carta> pila : zona) {
+                Carta carta = pila.peek();
+                if (minTamBandada && !esSuficiente(carta.getNombre())) {
                     continue;
                 }
                 lista.add(carta.getNombre());
@@ -163,19 +163,19 @@ public class Jugador {
             return lista;
         }
 
-        private void insertar(E elemento) {
-            int pos = existePilaElemento(elemento);
+        private void insertar(Carta carta) {
+            int pos = existePilaElemento(carta.getNombre());
             if (pos != -1) {
-                zona.get(pos).push(elemento);
+                zona.get(pos).push(carta);
             } else {
-                Stack<E> nuevaPila = new Stack<>();
-                nuevaPila.push(elemento);
+                Stack<Carta> nuevaPila = new Stack<>();
+                nuevaPila.push(carta);
                 zona.add(nuevaPila);
             }
         }
 
-        private Stack<E> eliminarElementos(E elementoTipo) throws Exception {
-            int pos = existePilaElemento(elementoTipo);
+        private Stack<Carta> eliminarElementos(Carta.AVE especie) throws Exception {
+            int pos = existePilaElemento(especie);
             if (pos == -1) {
                 throw new Exception("No existe ese tipo en la mano");
             } else {
@@ -183,24 +183,24 @@ public class Jugador {
             }
         }
 
-        private boolean esSuficiente(Carta carta) {
-            int pos = existePilaElemento((E) carta);
+        private boolean esSuficiente(Carta.AVE especie) {
+            int pos = existePilaElemento(especie);
             if (pos != -1) {
-                return zona.get(pos).size() >= carta.getBandadaPequena();
+                return zona.get(pos).size() >= new Carta(especie).getBandadaPequena();
             }
             return false;
         }
 
         private int getNumElementos() {
             int contador = 0;
-            for (Stack<E> pila : zona) {
+            for (Stack<Carta> pila : zona) {
                 contador += pila.size();
             }
             return contador;
         }
 
         private void pintar() {
-            for (Stack<E> pila : zona) {
+            for (Stack<Carta> pila : zona) {
                 System.out.println("Pila de " + pila.peek() + " | " + pila.size());
             }
         }

@@ -2,16 +2,16 @@ package core;
 
 import java.util.Stack;
 
-public class MontonDescartes<E> {
+public class MontonDescartes {
 
-    private Stack<E> elementos;
+    private Stack<Carta> elementos;
 
     public MontonDescartes() {
         this.elementos = new Stack<>();
     }
 
-    public void insertar(E elemento) {
-        this.elementos.push(elemento);
+    public void insertar(Carta carta) {
+        this.elementos.push(carta);
     }
 
 }

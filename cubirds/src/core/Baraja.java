@@ -4,12 +4,22 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Queue;
 
-public class Baraja<E> {
+public class Baraja {
 
-    private Queue<E> elementos;
+    private Queue<Carta> elementos;
 
     public Baraja() {
+
         elementos = new ArrayDeque<>();
+
+        Carta.AVE[] aves = Carta.AVE.values();
+
+        for (int i = 0; i < aves.length; i++) {
+            for (int j = 0; j < Carta.numeroCartasAve[i]; j++) {
+                elementos.add(new Carta(aves[i]));
+            }
+        }
+
     }
 
     public int tamaño() {
@@ -22,25 +32,25 @@ public class Baraja<E> {
 
     public void barajar() {
 
-        ArrayList<E> temp = new ArrayList<>(elementos);
+        ArrayList<Carta> temp = new ArrayList<>(elementos);
         elementos.clear();
 
         int x;
-        
+
         while (!temp.isEmpty()) {
             x = (int) (Math.random() * temp.size());
-            E tempEle = temp.remove(x);
+            Carta tempEle = temp.remove(x);
             elementos.add(tempEle);
         }
 
     }
 
-    public E suprimir() throws NullPointerException {
+    public Carta suprimir() throws NullPointerException {
         return this.elementos.remove();
     }
 
-    public void insertar(E e) throws IllegalArgumentException {
-        this.elementos.add(e);
+    public void insertar(Carta carta) throws IllegalArgumentException {
+        this.elementos.add(carta);
     }
 
 }

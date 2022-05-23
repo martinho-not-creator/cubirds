@@ -5,9 +5,9 @@ import static iu.Juego.NUM_MIN_ESPECIES_FILA;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Mesa<E> {
+public class Mesa {
 
-    private List<E>[] tablero;
+    private List<Carta>[] tablero;
 
     public Mesa(int numFilas) {
         tablero = new ArrayList[numFilas];
@@ -16,28 +16,28 @@ public class Mesa<E> {
         }
     }
 
-    public boolean existeEnFila(List<E> fila, E elemento) {
-        for (E element : fila) {
-            if (element.equals(elemento)) {
+    public boolean existeEnFila(List<Carta> fila, Carta.AVE especie) {
+        for (Carta carta : fila) {
+            if (carta.getNombre() == especie) {
                 return true;
             }
         }
         return false;
     }
 
-    public boolean rellenarFilas(Baraja<E> baraja) {
+    public boolean rellenarFilas(Baraja baraja, boolean esInicio) {
 
-        for (List<E> fila : tablero) {
+        for (List<Carta> fila : tablero) {
 
             int contador = 0;
 
             for (Carta.AVE especie : Carta.AVE.values()) {
-                if (existeEnFila(fila, (E) new Carta(especie))) {
+                if (existeEnFila(fila, especie)) {
                     contador++;
                 }
             }
 
-            while (contador < NUM_MIN_ESPECIES_FILA || fila.size() < NUM_CARTAS_INICIALES_FILA) {
+            while ((esInicio && contador < NUM_MIN_ESPECIES_FILA) || fila.size() < NUM_CARTAS_INICIALES_FILA) {
 
                 if (baraja.esVacio()) {
 
@@ -45,24 +45,24 @@ public class Mesa<E> {
 
                 }
 
-                Carta nuevaCarta = (Carta) baraja.suprimir();
+                Carta nuevaCarta = baraja.suprimir();
 
-                if (contador < NUM_MIN_ESPECIES_FILA) {
+                if (esInicio && contador < NUM_MIN_ESPECIES_FILA) {
 
-                    if (!existeEnFila(fila, (E) nuevaCarta)) {
+                    if (!existeEnFila(fila, nuevaCarta.getNombre())) {
 
-                        fila.add((E) nuevaCarta);
+                        fila.add(nuevaCarta);
                         contador++;
 
                     } else {
 
-                        baraja.insertar((E) nuevaCarta);
+                        baraja.insertar(nuevaCarta);
 
                     }
 
                 } else {
 
-                    fila.add((E) nuevaCarta);
+                    fila.add(nuevaCarta);
                     contador++;
 
                 }
@@ -75,102 +75,65 @@ public class Mesa<E> {
 
     }
 
-    public int contarEnFila(List<E> fila, E elemento, boolean iguales) {
+    public int contarEnFila(List<Carta> fila, Carta.AVE especie, boolean iguales) {
         int contador = 0;
-        for (E element : fila) {
-            if (iguales && element.equals(elemento)) {
+        for (Carta carta : fila) {
+            if (iguales && carta.getNombre() == especie) {
                 contador++;
-            } else if (!iguales && !element.equals(elemento)) {
+            } else if (!iguales && carta.getNombre() != especie) {
                 contador++;
             }
         }
         return contador;
     }
 
-    public List<E> elementosRepetidos(List<E> fila) {
-        List<E> toRet = new ArrayList<>();
-        for (E element : fila) {
-            if (contarEnFila(fila, element, true) > 1 && !toRet.contains(element)) {
-                toRet.add(element);
-            }
-        }
-        return toRet;
-    }
+    public List<Carta> eliminarRodeadas(int numFila, Carta.AVE especie, char lado) {
 
-    public List<E> eliminarRodeadas(int numFila, E elemento, char lado) {
+        List<Carta> fila = tablero[numFila];
+        List<Carta> cartasRodeadas = new ArrayList<>();
 
-        List<E> elementos = new ArrayList<>();
+        if (existeEnFila(fila, especie)) {
 
-        List<E> fila = tablero[numFila];
+            // Vamos de izquierda a derecha
+            if (lado == 'i') {
 
-        List<E> copiaFila = new ArrayList<>();
-        for (E ele : fila) {
-            copiaFila.add(ele);
-        }
+                while (fila.get(0).getNombre() != especie) {
 
-        int contadorDistintos = 0;
-
-        if (contarEnFila(fila, elemento, true) > 1) { // Existe en esa fila elementos repetidos
-
-            if (lado == 'i') { // De izquierda a derecha
-
-                while (existeEnFila(copiaFila, elemento)) {
-
-                    E elementoExtraido = copiaFila.remove(0);
-
-                    if (!elementoExtraido.equals(elemento)) {
-                        contadorDistintos++;
-                    }
-
-                    elementos.add(elemento);
+                    cartasRodeadas.add(fila.remove(0));
 
                 }
 
-            } else { // De derecha a izquierda
+            } else {
 
-                while (existeEnFila(copiaFila, elemento)) {
+                while (fila.get(fila.size() - 1).getNombre() != especie) {
 
-                    int pos = copiaFila.size() - 1;
-                    E elementoExtraido = copiaFila.remove(pos);
-
-                    if (!elementoExtraido.equals(elemento)) {
-                        contadorDistintos++;
-                    }
-
-                    elementos.add(elementoExtraido);
+                    cartasRodeadas.add(fila.remove(fila.size() - 1));
 
                 }
 
             }
+
         }
 
-        // No hemos encontrado ningun distinto no se actualiza la fila ni se devuelve ningun elemento
-        if (contadorDistintos == 0) {
-            elementos.clear();
-        } else {
-            // Al encontrar elementos distintos a lo que queremos insertar actualizamos la fila a la modificadda
-            tablero[numFila] = copiaFila;
-        }
-
-        return elementos;
+        return cartasRodeadas;
 
     }
 
-    public void insertarDerecha(int fila, E elemento) {
-        tablero[fila].add(elemento);
+    public void insertarDerecha(int fila, Carta carta) {
+        tablero[fila].add(carta);
     }
 
-    public void insertarIzquierda(int fila, E elemento) {
-        tablero[fila].add(0, elemento);
+    public void insertarIzquierda(int fila, Carta carta) {
+        tablero[fila].add(0, carta);
     }
 
     public void pintar() {
 
-        for (List<E> tablero1 : tablero) {
+        for (List<Carta> tablero1 : tablero) {
 
-            for (E elemento : tablero1) {
+            for (Carta carta : tablero1) {
 
-                System.out.print(elemento);
+                System.out.print(carta);
 
             }
 

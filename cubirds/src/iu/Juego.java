@@ -25,15 +25,15 @@ public class Juego {
     public static final int NUM_CARTAS_MANO_JUGADOR = 8;
     public static final int NUM_CARTAS_ROBAR = 2;
     public static final int NUM_ESPECIES_VICTORIA = 7;
-    public static final int NUM_MIN_ESPECIES_FILA = 2;
+    public static final int NUM_MIN_ESPECIES_FILA = 3;
 
     public static void inicio() {
 
-        Baraja<Carta> baraja = inicializarBaraja();
+        Baraja baraja = inicializarBaraja();
 
-        MontonDescartes<Carta> descartes = inicializarMontonDescartes();
+        MontonDescartes descartes = inicializarMontonDescartes();
 
-        Mesa<Carta> mesa = inicializarMesa(baraja);
+        Mesa mesa = inicializarMesa(baraja);
 
         int numJugadores = leeEntero("Numero de jugadores: ", true, 2, 5);
         Queue<Jugador> jugadores = inicializarJugadores(numJugadores, baraja);
@@ -42,7 +42,7 @@ public class Juego {
 
     }
 
-    public static void iniciarJuego(Queue<Jugador> jugadores, Mesa<Carta> mesa, MontonDescartes<Carta> montonDescartes, Baraja<Carta> baraja) {
+    public static void iniciarJuego(Queue<Jugador> jugadores, Mesa mesa, MontonDescartes montonDescartes, Baraja baraja) {
 
         boolean hayGanador = false;
         Jugador jugadorActual = null;
@@ -64,7 +64,11 @@ public class Juego {
                 mesa.pintar();
 
                 // Jugar cartas
-                jugarCartas(jugadorActual, mesa, baraja);
+                boolean completadoRobo = jugarCartas(jugadorActual, mesa, baraja);
+                if (!completadoRobo) {
+                    System.out.println("Se termina el juego por robo de cartas");
+                    break;
+                }
 
                 // Completar bandadas
                 do {
@@ -73,6 +77,8 @@ public class Juego {
                         decision = leeDecision("Quieres completar bandada: ");
                         if (decision) {
                             completarBandada(jugadorActual, bandadasDisponibles, montonDescartes);
+                            // Para que no pueda completar mas veces
+                            decision = false;
                         }
                     } else {
                         decision = false;
@@ -85,16 +91,19 @@ public class Juego {
 
                 if (!hayGanador) {
 
-                    boolean completadaMano;
+                    boolean completadaMano = true;
                     boolean completadaFilas;
 
                     // Rellenamos la mano del jugador si no tiene cartas
-                    completadaMano = rellenarMano(jugadorActual, baraja);
+                    if (jugadorActual.numCartasMano() == 0) {
+                        completadaMano = rellenarMano(jugadorActual, baraja);
+                    }
 
                     // Rellenamos las filas si no tienen 2 especies distintas
-                    completadaFilas = rellenarFilas(mesa, baraja);
+                    completadaFilas = rellenarFilas(mesa, baraja, false);
 
                     if (!completadaMano || !completadaFilas) {
+                        System.out.println("Se termina el juego por tareas");
                         completadasTareas = false;
                     }
 
@@ -136,6 +145,7 @@ public class Juego {
             if (jugador.numEspeciesDistintasZonaJuego() > max) {
                 ganadores.clear();
                 ganadores.add(jugador);
+                max = jugador.numEspeciesDistintasZonaJuego();
             } else if (jugador.numEspeciesDistintasZonaJuego() == max) {
                 ganadores.add(jugador);
             }
@@ -143,11 +153,11 @@ public class Juego {
         return ganadores;
     }
 
-    public static boolean rellenarFilas(Mesa<Carta> mesa, Baraja<Carta> baraja) {
-        return mesa.rellenarFilas(baraja);
+    public static boolean rellenarFilas(Mesa mesa, Baraja baraja, boolean esInicio) {
+        return mesa.rellenarFilas(baraja, esInicio);
     }
 
-    public static boolean rellenarMano(Jugador jugador, Baraja<Carta> baraja) {
+    public static boolean rellenarMano(Jugador jugador, Baraja baraja) {
         return jugador.rellenarMano(baraja);
     }
 
@@ -155,7 +165,7 @@ public class Juego {
         return jugador.numEspeciesDistintasZonaJuego() == NUM_ESPECIES_VICTORIA;
     }
 
-    public static void completarBandada(Jugador jugador, List<Carta.AVE> bandadasDisponibles, MontonDescartes<Carta> montonDescartes) throws Exception {
+    public static void completarBandada(Jugador jugador, List<Carta.AVE> bandadasDisponibles, MontonDescartes montonDescartes) throws Exception {
 
         jugador.mostrarMano();
         jugador.mostrarZonaJuego();
@@ -163,9 +173,9 @@ public class Juego {
         if (!bandadasDisponibles.isEmpty()) {
 
             // Seleccionamos la especie que quiere completar
-            Carta cartaEspecie = new Carta(leeEspecie("Que bandada quieres completar: ", bandadasDisponibles));
+            Carta.AVE especie = leeEspecie("Que bandada quieres completar: ", bandadasDisponibles);
 
-            Stack<Carta> pilaCartas = jugador.eliminarCartasMano(cartaEspecie);
+            Stack<Carta> pilaCartas = jugador.eliminarCartasMano(especie);
 
             jugador.anadirCartasZonaJuego(pilaCartas.pop());
 
@@ -180,20 +190,26 @@ public class Juego {
 
     }
 
-    public static void jugarCartas(Jugador jugador, Mesa<Carta> mesa, Baraja<Carta> baraja) throws Exception {
+    public static boolean jugarCartas(Jugador jugador, Mesa mesa, Baraja baraja) throws Exception {
+
+        boolean jugadaTerminada = true;
 
         jugador.mostrarMano();
         jugador.mostrarZonaJuego();
 
         // Jugar cartas
-        Carta cartaBajar = new Carta(leeEspecie("Que cartas quieres bajar: ", jugador.especiesDisponiblesMano(false)));
+        Carta.AVE cartaBajar = leeEspecie("Que cartas quieres bajar: ", jugador.especiesDisponiblesMano(false));
 
         // Se eliminan las cartas de esa misma especie de la mano
         Stack<Carta> cartasMano = jugador.eliminarCartasMano(cartaBajar);
 
         // Posiciones para colocar las cartas
-        char lado = leeLado("Introduce el lado para bajar " + cartaBajar.getNombre() + ": ");
-        int fila = leeEntero("Introduce la fila para bajar " + cartaBajar.getNombre() + ": ", true, 0, NUM_FILAS - 1);
+        char lado = leeLado("Introduce el lado para bajar " + cartaBajar + ": ");
+        int fila = leeEntero("Introduce la fila para bajar " + cartaBajar + ": ", true, 0, NUM_FILAS - 1);
+
+        // Comprobamos si rodeamos cartas
+        List<Carta> eliminadas = mesa.eliminarRodeadas(fila, cartaBajar, lado);
+        System.out.println("Rodeaste: " + eliminadas.size());
 
         // Colocamos las cartas en la mesa segun el lado y la fila indicada
         if (lado == 'd') {
@@ -205,10 +221,6 @@ public class Juego {
                 mesa.insertarIzquierda(fila, cartasMano.pop());
             }
         }
-
-        // Comprobamos si rodeamos cartas
-        List<Carta> eliminadas = mesa.eliminarRodeadas(fila, cartaBajar, lado);
-        System.out.println("Rodeaste: " + eliminadas.size());
 
         // Se han eliminado cartas se agregan a la mano
         if (!eliminadas.isEmpty()) {
@@ -223,8 +235,16 @@ public class Juego {
 
             if (leeDecision("Quieres robar cartas: ")) {
 
-                for (int i = 0; i < NUM_CARTAS_ROBAR && !baraja.esVacio(); i++) {
+                // TODO Seria necesario comprobar que roba todas las cartas necesarias
+                for (int i = 0; i < NUM_CARTAS_ROBAR; i++) {
+
+                    if (baraja.esVacio()) {
+                        jugadaTerminada = false;
+                        break;
+                    }
+
                     jugador.anadirCartaMano(baraja.suprimir());
+
                 }
 
             }
@@ -234,18 +254,13 @@ public class Juego {
         jugador.mostrarMano();
         jugador.mostrarZonaJuego();
 
+        return jugadaTerminada;
+
     }
 
-    public static Baraja<Carta> inicializarBaraja() {
+    public static Baraja inicializarBaraja() {
 
-        Baraja<Carta> baraja = new Baraja<>();
-        Carta.AVE[] aves = Carta.AVE.values();
-
-        for (int i = 0; i < aves.length; i++) {
-            for (int j = 0; j < Carta.numeroCartasAve[i]; j++) {
-                baraja.insertar(new Carta(aves[i]));
-            }
-        }
+        Baraja baraja = new Baraja();
 
         baraja.barajar();
 
@@ -253,18 +268,18 @@ public class Juego {
 
     }
 
-    public static MontonDescartes<Carta> inicializarMontonDescartes() {
-        MontonDescartes<Carta> montonDescartes = new MontonDescartes<>();
+    public static MontonDescartes inicializarMontonDescartes() {
+        MontonDescartes montonDescartes = new MontonDescartes();
         return montonDescartes;
     }
 
-    public static Mesa<Carta> inicializarMesa(Baraja<Carta> baraja) {
-        Mesa<Carta> mesa = new Mesa<>(NUM_FILAS);
-        mesa.rellenarFilas(baraja);
+    public static Mesa inicializarMesa(Baraja baraja) {
+        Mesa mesa = new Mesa(NUM_FILAS);
+        mesa.rellenarFilas(baraja, true);
         return mesa;
     }
 
-    public static Jugador inicializarJugador(Baraja<Carta> baraja) {
+    public static Jugador inicializarJugador(Baraja baraja) {
 
         String nombre = leeCadena("Introduce el nombre del jugador: ", false);
         Jugador nuevoJugador = new Jugador(nombre);
@@ -276,7 +291,7 @@ public class Juego {
 
     }
 
-    public static Queue<Jugador> inicializarJugadores(int numJugadores, Baraja<Carta> baraja) {
+    public static Queue<Jugador> inicializarJugadores(int numJugadores, Baraja baraja) {
 
         List<Jugador> jugadores = new ArrayList<>(numJugadores);
 
