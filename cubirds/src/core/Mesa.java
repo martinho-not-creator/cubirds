@@ -63,13 +63,13 @@ public class Mesa {
 
                 } else {
 
-                    fila.add(nuevaCarta);
-
                     if (!existeEnFila(fila, nuevaCarta.getNombre())) {
 
                         contadorEspeciesDistintas++;
 
                     }
+
+                    fila.add(nuevaCarta);
 
                 }
 

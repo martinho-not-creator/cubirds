@@ -235,7 +235,6 @@ public class Juego {
 
             if (leeDecision("Quieres robar cartas: ")) {
 
-                // TODO Seria necesario comprobar que roba todas las cartas necesarias
                 for (int i = 0; i < NUM_CARTAS_ROBAR; i++) {
 
                     if (baraja.esVacio()) {
