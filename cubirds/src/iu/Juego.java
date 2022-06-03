@@ -301,8 +301,8 @@ public class Juego {
 
         // Desordenamos la lista
         for (int i = 0; i < jugadores.size(); i++) {
-            int x = (int) (Math.random() * jugadores.size());
-            Jugador tempEle = jugadores.remove(x);
+            int posAleatoria = (int) (Math.random() * jugadores.size());
+            Jugador tempEle = jugadores.remove(posAleatoria);
             jugadores.add(tempEle);
         }
 

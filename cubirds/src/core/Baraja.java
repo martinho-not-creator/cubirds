@@ -35,11 +35,11 @@ public class Baraja {
         ArrayList<Carta> temp = new ArrayList<>(elementos);
         elementos.clear();
 
-        int x;
+        int posAleatoria;
 
         while (!temp.isEmpty()) {
-            x = (int) (Math.random() * temp.size());
-            Carta tempEle = temp.remove(x);
+            posAleatoria = (int) (Math.random() * temp.size());
+            Carta tempEle = temp.remove(posAleatoria);
             elementos.add(tempEle);
         }
 
