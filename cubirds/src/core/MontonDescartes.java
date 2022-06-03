@@ -13,5 +13,5 @@ public class MontonDescartes {
     public void insertar(Carta carta) {
         this.elementos.push(carta);
     }
-
+    
 }

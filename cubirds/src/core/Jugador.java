@@ -83,7 +83,7 @@ public class Jugador {
         private List<Stack<Carta>> zonaJuego;
 
         private ZonaJuego() {
-            zonaJuego = new ArrayList<Stack<Carta>>();
+            zonaJuego = new ArrayList<>();
         }
 
         private int existePilaAve(Carta.AVE especie) {
@@ -138,7 +138,7 @@ public class Jugador {
         private List<Stack<Carta>> mano;
 
         private Mano() {
-            mano = new ArrayList<Stack<Carta>>();
+            mano = new ArrayList<>();
         }
 
         private int existePilaElemento(Carta.AVE especie) {
