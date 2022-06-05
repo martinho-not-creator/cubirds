@@ -54,7 +54,7 @@ public class Carta {
 
     public boolean equals(Carta carta) {
 
-        return carta == this.getNombre();
+        return carta.getNombre() == this.getNombre();
 
     }
 
