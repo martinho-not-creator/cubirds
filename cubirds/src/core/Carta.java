@@ -52,7 +52,6 @@ public class Carta {
         return builder.toString();
     }
 
-    @Override
     public boolean equals(Carta carta) {
 
         return carta == this.getNombre();
