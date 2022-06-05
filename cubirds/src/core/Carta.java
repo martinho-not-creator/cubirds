@@ -53,10 +53,9 @@ public class Carta {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(Carta carta) {
 
-        Carta objCarta = (Carta) obj;
-        return objCarta.nombre == this.getNombre();
+        return carta == this.getNombre();
 
     }
 
