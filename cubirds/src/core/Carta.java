@@ -52,9 +52,9 @@ public class Carta {
         return builder.toString();
     }
 
-    public boolean equals(Carta carta) {
+    public boolean igual(Carta carta) {
 
-        return carta.getNombre() == this.getNombre();
+        return carta.getNombre().equals(this.getNombre());
 
     }
 
